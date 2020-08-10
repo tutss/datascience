@@ -1,8 +1,0 @@
-numpy
-matplotlib
-seaborn
-pandas
-panel
-vega_datasets
-altair
-datetime
