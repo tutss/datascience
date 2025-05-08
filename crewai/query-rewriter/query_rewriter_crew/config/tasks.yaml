@@ -1,0 +1,78 @@
+rewrite:
+  description: >
+    Rewrite a human input string. Focus on:
+    1. Correcting typos
+    2. Rewriting into concise way
+    3. Emphasize the intent.
+  expected_output: >
+    Only the re-written human input string, in a concise, accurate and clear manner.
+  agent: rewriter
+
+generate_query:
+  description: >
+    Generate a SQL query based on the user input. Focus on:
+    1. Retrieving relevant data
+    2. Filtering and sorting the data
+    3. Limiting the number of results, if necessary
+    4. Formatting the query in a way that is easy to understand and execute
+    5. Select the appropriate tables to add to the query
+
+    To accomplish your task, you need to:
+    1. You need to identify the available tables.
+    2. You need to identify each tables schema.
+
+    Make sure to generate a query that is optimized and executable
+  expected_output: >
+    A SQL query that retrieves and processes data based on the user input.
+    The query should be optimized and executable. The query should use only
+    the available tables and columns. It will be used directly to query a database.
+    Output should be enclosed on <sql> tags (e.g. <sql>SELECT *...</sql>). 
+  agent: sql_writer
+  context:
+    - rewrite_task
+
+# improve_query:
+#   description: >
+#     Conduct thorough research on {topic}. Focus on:
+#     1. Key concepts and definitions
+#     2. Historical development and recent trends
+#     3. Major challenges and opportunities
+#     4. Notable applications or case studies
+#     5. Future outlook and potential developments
+
+#     Make sure to organize your findings in a structured format with clear sections.
+#   expected_output: >
+#     A comprehensive research document with well-organized sections covering
+#     all the requested aspects of {topic}. Include specific facts, figures,
+#     and examples where relevant.
+#   agent: researcher
+
+audit_query:
+  description: >
+    Validate if a SQL query is valid for execution. Focus on:
+    1. Commands are valid
+    2. There is no typos
+    3. Query has no obvious errors
+  expected_output: >
+    You should only output: 
+    1. context SQL query in <sql> tags.
+    2. yes or no to check if SQL query is valid in <answer> tags (e.g. <answer>yes</answer> or <answer>yes</answer>). 
+  agent: auditor
+
+# retrieve:
+#   description: >
+#     Retrieve information using the query {sql_query} and summarize the results. Focus on:
+#     1. Key concepts and definitions
+#     2. Historical development and recent trends
+#     3. Major challenges and opportunities
+#     4. Notable applications or case studies
+#     5. Future outlook and potential developments
+
+#     Make sure to organize your findings in a structured format with clear sections.
+#   expected_output: >
+#     A polished, professional report on {topic} that presents the research
+#     findings with added analysis and insights. The report should be well-structured
+#     with an executive summary, main sections, and conclusion.
+#   agent: analyst
+#   context:
+#     - research_task
