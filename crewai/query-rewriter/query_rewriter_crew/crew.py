@@ -2,13 +2,11 @@ import logging
 
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-import psycopg2
 
 from tools.custom_tools import read_tables_list_tool, read_table_info_tool
 
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("app")
 
 @CrewBase
 class SQLCrew():
@@ -34,18 +32,18 @@ class SQLCrew():
             tools=[read_tables_list_tool, read_table_info_tool]
         )
     
-    # @agent
-    # def optimizer(self) -> Agent:
-    #     return Agent(
-    #         config=self.agents_config['optimizer'],
-    #         verbose=True
-    #     )
+    @agent
+    def optimizer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['optimizer'],
+            verbose=True
+        )
     
     @agent
     def auditor(self) -> Agent:
         return Agent(
             config=self.agents_config['auditor'],
-            max_iter=2,
+            max_iter=3,
             verbose=True
         )
     
@@ -67,7 +65,14 @@ class SQLCrew():
         return Task(
             config=self.tasks_config['generate_query'],
             context=[self.rewrite_task()],
-            max_retries=2,
+            max_retries=5,
+        )
+    
+    @task
+    def improve_query_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['improve_query'],
+            context=[self.generate_query_task(), self.rewrite_task()],
         )
     
     @task
@@ -77,11 +82,6 @@ class SQLCrew():
             context=[self.generate_query_task()],
         )
     
-    # @task
-    # def improve_query_task(self) -> Task:
-    #     return Task(
-    #         config=self.tasks_config['rewrite_task']
-    #     )
 
     # @task
     # def retrieve_task(self) -> Task:
