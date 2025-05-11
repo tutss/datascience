@@ -39,7 +39,13 @@ class Query(BaseModel):
 
 def parse_result(result: str) -> str:
     if isinstance(result, list):
-        return '\n '.join(', '.join(str(value) for value in tuple_item) for tuple_item in result)
+        if len(result) > 0 and isinstance(result[0], tuple):
+            if len(result[0]) > 1:  # If it's table info (multiple columns)
+                return '\n'.join(f"{col[0]}: {col[1]}" + (f" (max length: {col[2]})" if col[2] else "") for col in result)
+            else:  # If it's just a list of single values
+                return ', '.join(str(item[0]) for item in result)
+        # New case: list of tuples with multiple values
+        return '; '.join(', '.join(str(value) for value in tuple_item) for tuple_item in result)
     return str(result)
     
 

@@ -22,7 +22,9 @@ export default function Mimir() {
     const fetchTables = async () => {
       try {
         const { data } = await axios.get('/api/tables');
-        setAvailableTables(data.tables.split(', '));
+        const tables = data.tables.split(', ');
+        console.log('My tables', tables);
+        setAvailableTables(tables);
       } catch (error) {
         console.error('Error fetching tables:', error);
       }
@@ -125,7 +127,7 @@ export default function Mimir() {
             </svg>
           </button>
           {isTablesOpen && (
-            <div className="pl-4 mt-2">
+            <div className="pl-4 mt-2 space-y-1">
               {availableTables.map((table, index) => (
                 <div 
                   key={index} 

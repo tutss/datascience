@@ -1,3 +1,8 @@
+# Mimir
+
+![Mimir UI](./sample-image-1.png)
+
+![Mimir UI](./sample-image-2.png)
 
 # Run application
 
