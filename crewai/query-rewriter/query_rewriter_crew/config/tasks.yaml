@@ -44,7 +44,7 @@ improve_query:
   expected_output: >
     You should only output: 
     1. corrected SQL query in <sql> tags.
-    2. yes or no to check if SQL query answers the query in <answer> tags (e.g. <answer>yes</answer> or <answer>yes</answer>).
+    2. yes or no to check if SQL query answers the query in <answer> tags (e.g. <answer>yes</answer> or <answer>no</answer>).
   agent: optimizer
 
 audit_query:
@@ -58,7 +58,7 @@ audit_query:
   expected_output: >
     You should only output: 
     1. context SQL query in <sql> tags.
-    2. yes or no to check if SQL query is valid in <answer> tags (e.g. <answer>yes</answer> or <answer>yes</answer>). 
+    2. yes or no to check if SQL query is valid in <answer> tags (e.g. <answer>yes</answer> or <answer>no</answer>). 
   agent: auditor
 
 # retrieve:

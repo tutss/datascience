@@ -4,9 +4,11 @@ from dotenv import load_dotenv
 import logging
 
 from fastapi import FastAPI, HTTPException
+import pandas as pd
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import psycopg2
 
 from crew import SQLCrew
 from utils import extract_answer_tag, extract_sql_tag
@@ -47,7 +49,7 @@ def parse_result(result: str) -> str:
         # New case: list of tuples with multiple values
         return '; '.join(', '.join(str(value) for value in tuple_item) for tuple_item in result)
     return str(result)
-    
+
 
 @app.post("/api/search")
 async def search(query: Query):

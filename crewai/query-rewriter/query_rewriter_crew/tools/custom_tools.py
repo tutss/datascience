@@ -61,5 +61,8 @@ def query_table_tool(query: str):
     It returns the result of the query as a string.
     """
     with CONNECTION.cursor() as cur:
+        cur.execute("ROLLBACK")
+    
+    with CONNECTION.cursor() as cur:
         cur.execute(f"{query}")
         return cur.fetchall()

@@ -6,7 +6,7 @@ from crewai.project import CrewBase, agent, crew, task
 from tools.custom_tools import read_tables_list_tool, read_table_info_tool
 
 
-logger = logging.getLogger("app")
+# logger = logging.getLogger("app")
 
 @CrewBase
 class SQLCrew():
@@ -20,14 +20,14 @@ class SQLCrew():
     def rewriter(self) -> Agent:
         return Agent(
             config=self.agents_config['rewriter'],
-            verbose=True,
+            verbose=False,
         )
 
     @agent
     def sql_writer(self) -> Agent:
         return Agent(
             config=self.agents_config['sql_writer'],
-            verbose=True,
+            verbose=False,
             max_iter=5,
             tools=[read_tables_list_tool, read_table_info_tool]
         )
@@ -36,7 +36,7 @@ class SQLCrew():
     def optimizer(self) -> Agent:
         return Agent(
             config=self.agents_config['optimizer'],
-            verbose=True
+            verbose=False
         )
     
     @agent
@@ -44,7 +44,7 @@ class SQLCrew():
         return Agent(
             config=self.agents_config['auditor'],
             max_iter=3,
-            verbose=True
+            verbose=False
         )
     
     # @agent
@@ -96,5 +96,5 @@ class SQLCrew():
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            verbose=True,
+            verbose=False,
         )

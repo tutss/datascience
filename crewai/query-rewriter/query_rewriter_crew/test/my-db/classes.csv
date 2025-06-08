@@ -1,0 +1,17 @@
+id,professor_id,course_id,semester,year
+1,1,1,First Semester,2024
+2,2,2,Second Semester,2023
+3,3,3,First Semester,2022
+4,4,4,Second Semester,2021
+5,5,5,First Semester,2020
+6,6,6,Second Semester,2019
+7,7,7,First Semester,2018
+8,8,8,Second Semester,2017
+9,9,9,First Semester,2016
+10,10,10,Second Semester,2015
+11,11,11,First Semester,2014
+12,12,12,Second Semester,2013
+13,13,13,First Semester,2012
+14,14,14,Second Semester,2011
+15,15,15,First Semester,2010
+16,1,16,First Semester,2025
