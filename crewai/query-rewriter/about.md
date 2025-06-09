@@ -24,7 +24,11 @@ Nossa aplicação possui os agentes (1) *Rewriter*, (2) *SQL Writer*, (3) *Optim
 
 ## Testes
 
-Para testar o sistema, nós investigamos os benchmarks disponíveis, como o Spider e BIRD [[TODO: adicionar referencia]]. Por limitações de tempo e custo, optamos por construir e testar nosso sistema com um subconjunto de dados a partir dos exercícios de classe. O primeiro deles é relacionado ao exercício da CooperAgri. O segundo deles foi construído a partir dos exercícios da CooperAgri e dos exercícios relativos ao banco de disciplinas, exercício 5 da prova 1.
+Para testar o sistema, nós investigamos os benchmarks disponíveis, como o Spider e BIRD [[TODO: adicionar referencia]]. Por limitações de tempo e custo, optamos por construir e testar nosso sistema com um subconjunto de dados a partir dos exercícios de classe. Com os exercícios, temos uma pergunta (e.g. qual é o restaurante que está em Santo André?) e uma resposta validada - a resposta do exercício.
+
+O teste se baseia na (1) execução da consulta em linguagem natural utilizando o sistema multiagentes, (2) são gerados os resultados: a consulta gerada pelo sistema e a execução da consulta. Depois, (3) utilizando do mecanismo de LLM as a Judge [[TODO: adicionar referencia]], a LLM decide se: a consulta equivale a consulta correta - *gold SQL query* - e se os resultados são equivalentes.
+
+O primeiro conjunto de dados é relacionado ao exercício da CooperAgri. O segundo deles foi construído a partir dos exercícios da CooperAgri e dos exercícios relativos ao banco de disciplinas, exercício 5 da prova 1, utilizando a estrutura do benchmark Spider. Nele, o sistema só possui acesso ao *schema* e a instrução - no nosso caso, a pergunta do exercício. O terceiro foi construído baseado no exercício que utiliza o banco de dados do exercício 5 da P1 (banco de dados de alunos, professores etc).
 
 
 
@@ -34,3 +38,4 @@ Para testar o sistema, nós investigamos os benchmarks disponíveis, como o Spid
 
 * CrewAI: https://www.crewai.com/
 * o3-mini: https://openai.com/index/openai-o3-mini/
+* LLM as a Judge: https://arxiv.org/abs/2411.15594

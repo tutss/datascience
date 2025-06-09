@@ -4,6 +4,8 @@
 
 ![Mimir UI](./images/sample-image-2.png)
 
+![Your New Image](./images/your-new-image.png)
+
 # Run application
 
 ## Launch API

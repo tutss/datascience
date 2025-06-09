@@ -80,18 +80,18 @@ def test_model(query: str):
         "result": parsed_query_results
     }
 
-if __name__ == "__main__":
+
+def run_test():
     db_params = {
         'host': 'localhost',
         'dbname': 'test',
         'user': 'arturmagalhaes'
     }
 
-    # Execute the SQL file to create and populate the database
-    sql_file_path = 'test/exercise-3/criacao_bd_CooperAgri.sql'
+    sql_file_path = 'test/students-exercise/script_criacao_bd_alunos.sql'
     execute_sql_file(sql_file_path, db_params)
 
-    df = pd.read_csv('test/exercise-3/test_file.csv')
+    df = pd.read_csv('test/students-exercise/test_file.csv')
 
     results = {
         'llm_query': [],
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     }
     for index, row in df.iterrows():
         question = row['question']
-        expected_answer = row['expected_query']
+        expected_answer = row['expected_query'].replace('\n', ' ')
 
         logger.info(f'Query: {question}')
         logger.info(f'Gold query: {expected_answer}')
@@ -110,6 +110,7 @@ if __name__ == "__main__":
 
         try:
             gold_executed_query = query_table_tool(expected_answer)
+            gold_executed_query = parse_result(gold_executed_query)
         except Exception as err:
             gold_executed_query = 'Failed'
     
@@ -119,4 +120,90 @@ if __name__ == "__main__":
 
     df_results = pd.DataFrame(results)
     df = pd.concat([df, df_results], axis=1)
-    df.to_csv('test/exercise-3/test_file_results.csv', index=False)
+    df.to_csv('test/students-exercise/test_file_results.csv', index=False)
+
+
+def test_model_w_spider(inputs: dict):
+    logger.info('Kicking off the crew')
+    result = SQLCrew().crew().kickoff(inputs=inputs)
+    logger.info(f'Final Crew output = {result}')
+
+    cleaned_query = extract_sql_tag(result.raw)
+    
+    try:
+        query_results = query_table_tool(cleaned_query)
+    except Exception as err:
+        logger.error('Couldnt execute query')
+        query_results = 'Failed'
+
+    try:
+        parsed_query_results = parse_result(query_results)
+    except Exception as err:
+        logger.error('Couldnt parse query results')
+        parsed_query_results = query_results
+    
+    logger.info(f'Final parsed query output = {parsed_query_results}')
+
+    return {
+        "query": cleaned_query,
+        "result": parsed_query_results
+    }
+
+
+def run_spider_test():
+    """
+    I modified optimizer agent to use db_schema
+    I modified the tools usage on optimizer, removing them
+    """
+    db_params = {
+        'host': 'localhost',
+        'dbname': 'test',
+        'user': 'arturmagalhaes'
+    }
+
+    sql_file_path = 'test/spider-style/criacao_bd_CooperAgri.sql'
+    execute_sql_file(sql_file_path, db_params)
+    sql_file_path = 'test/spider-style/script_criacao_bd_alunos.sql'
+    execute_sql_file(sql_file_path, db_params)
+
+
+    data_file_path = 'test/spider-style/mdb_proj2_resource.json'
+    df = pd.read_json(data_file_path)
+
+    results = {
+        'llm_query': [],
+        'llm_executed_query_results': [],
+        'gold_sql_results': []
+    }
+    for index, row in df.iterrows():
+        instruction = row['instruction']
+        db_schema = row['db_schema']
+        gold_sql = row['gold_sql'].replace('\n', ' ')
+
+        inputs = {
+            'query': instruction,
+            'db_schema': db_schema,
+        }
+
+        logger.info(f'Query inputs are = {inputs}')
+        logger.info(f'Gold query = {gold_sql}')
+
+        result = test_model_w_spider(inputs=inputs)
+        results['llm_query'].append(result['query'])
+        results['llm_executed_query_results'].append(result['result'])
+
+        try:
+            gold_executed_query = query_table_tool(gold_sql)
+        except Exception as err:
+            gold_executed_query = 'Failed'
+
+        results['gold_sql_results'].append(gold_executed_query)
+
+    df_results = pd.DataFrame(results)
+    df = pd.concat([df, df_results], axis=1)
+    df.to_csv('test/spider-style/test_file_results.csv', index=False)
+
+
+if __name__ == "__main__":
+    run_test()
+    # run_spider_test()

@@ -1,11 +1,4 @@
--- Cria uma "pasta" chamada exercicio_alunos dentro do bando de dados atual
-CREATE SCHEMA exercicio_alunos;  
-
--- "Entra" na pasta criada
--- (o comando abaixo so existe no SGBD PostgreSQL)
-SET search_path TO exercicio_alunos;  
-
--- Todas as operacoes abaixo serao realizadas dentro da pasta criada
+DROP TABLE IF EXISTS Aluno CASCADE;
 create table Aluno(
 	nroAluno numeric(9,0) primary key,
 	nomeAluno varchar(30),
@@ -13,11 +6,15 @@ create table Aluno(
 	nivel varchar(2),
 	idade numeric(3,0)
 	);
+
+DROP TABLE IF EXISTS Professor CASCADE;
 create table Professor(
 	idProf numeric(9,0) primary key,
 	nomeProf varchar(30),
 	idDepto numeric(2,0)
 	);
+
+DROP TABLE IF EXISTS Curso CASCADE;
 create table Curso(
 	nome varchar(40) primary key,
 	horario varchar(20),
@@ -25,6 +22,8 @@ create table Curso(
 	idProf numeric(9,0),
 	foreign key(idProf) references Professor
 	);
+
+DROP TABLE IF EXISTS Matriculado CASCADE;
 create table Matriculado(
 	nroAluno numeric(9,0),
 	nomeCurso varchar(40),
