@@ -8,6 +8,10 @@ __pycache__/
 
 *.xml
 *.jpg
+*.tar.gz
+*.png
+*.xml
+*.DS_Store
 
 # Distribution / packaging
 .Python
