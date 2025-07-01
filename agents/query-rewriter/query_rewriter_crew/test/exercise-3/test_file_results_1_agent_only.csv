@@ -1,0 +1,133 @@
+question,expected_query,llm_query,llm_executed_query_results,expected_query_results,llm_query_raw_results,expected_query_raw_results
+Liste os nomes dos restaurantes que ficam em Santo André.,select NomeR from Restaurante where CidadeR = 'Santo André';,SELECT nomer FROM restaurante WHERE cidader = 'Santo André';,Sabor de Minas,Sabor de Minas,"[('Sabor de Minas',)]","[('Sabor de Minas',)]"
+"Liste todas as informações dos produtos cujo nome começa com a letra “c”  e cujo preço por quilo é inferior a R$3,00.",select * from Produto where (NomeP like 'c%' or NomeP like 'C%') and PrecoQuilo < 3;,SELECT * FROM produto WHERE nomep ILIKE 'c%' AND precoquilo < 3.00;,"2003: cebola (max length: 2.98)
+2004: cenoura (max length: 1.98)
+2005: chuchu (max length: 2.49)","2003: cebola (max length: 2.98)
+2004: cenoura (max length: 1.98)
+2005: chuchu (max length: 2.49)","[(2003, 'cebola', Decimal('2.98')), (2004, 'cenoura', Decimal('1.98')), (2005, 'chuchu', Decimal('2.49'))]","[(2003, 'cebola', Decimal('2.98')), (2004, 'cenoura', Decimal('1.98')), (2005, 'chuchu', Decimal('2.49'))]"
+Liste os códigos dos agricultores que já entregaram produtos para o restaurante RU-USP.,select CodA from Entrega natural join Restaurante where NomeR = 'RU-USP';,"SELECT DISTINCT a.coda
+FROM agricultor a
+JOIN entrega e ON a.coda = e.coda
+JOIN restaurante r ON e.codr = r.codr
+WHERE r.nomer = 'RU-USP';","1001, 1004","1004, 1001","[(1001,), (1004,)]","[(1004,), (1001,)]"
+Liste os nomes dos produtos que já foram alguma vez entregues por um agricultor de Mogi das Cruzes.,select distinct NomeP from Entrega natural join Produto natural join Agricultor where CidadeA = 'Mogi das Cruzes';,"
+SELECT DISTINCT p.nomep
+FROM produto p
+JOIN entrega e ON p.codp = e.codp
+JOIN agricultor a ON e.coda = a.coda
+WHERE a.cidadea = 'Mogi das Cruzes';
+","alface, batata, cebola, chuchu, couve-flor","alface, batata, cebola, chuchu, couve-flor","[('alface',), ('batata',), ('cebola',), ('chuchu',), ('couve-flor',)]","[('alface',), ('batata',), ('cebola',), ('chuchu',), ('couve-flor',)]"
+Liste os códigos dos agricultores que já entregaram batatas e também já entregaram cebolas.,select CodA from Entrega natural join Produto where NomeP = 'batata' intersect select CodA from Entrega natural join Produto where NomeP = 'cebola';,"
+SELECT e.coda
+FROM entrega e
+JOIN produto p ON e.codp = p.codp
+WHERE p.nomep IN ('batatas', 'cebolas')
+GROUP BY e.coda
+HAVING COUNT(DISTINCT p.nomep) = 2;
+",,"1002, 1004, 1003",[],"[(1002,), (1004,), (1003,)]"
+"Liste os códigos dos agricultores que já entregaram batatas, mas nunca entregaram cebolas.",(select CodA from Entrega natural join Produto where NomeP = 'batata') except (select CodA from Entrega natural join Produto where NomeP = 'cebola');,"
+SELECT a.coda
+FROM agricultor a
+WHERE EXISTS (
+    SELECT 1
+    FROM entrega e
+    JOIN produto p ON e.codp = p.codp
+    WHERE e.coda = a.coda
+      AND p.nomep = 'batatas'
+)
+AND NOT EXISTS (
+    SELECT 1
+    FROM entrega e
+    JOIN produto p ON e.codp = p.codp
+    WHERE e.coda = a.coda
+      AND p.nomep = 'cebolas'
+);
+",,1005,[],"[(1005,)]"
+"Liste todas as triplas (código do agricultor, código do produto, código do restaurante) extraídas de Entrega tais que o agricultor e o restaurante estejam na mesma cidade.","select CodA, CodP, codR from Entrega natural join Agricultor natural join Restaurante where CidadeA = CidadeR;","
+SELECT e.coda AS ""Código do Agricultor"", 
+       e.codp AS ""Código do Produto"", 
+       e.codr AS ""Código do Restaurante""
+FROM entrega e
+JOIN agricultor a ON e.coda = a.coda
+JOIN restaurante r ON e.codr = r.codr
+WHERE a.cidadea = r.cidader;
+","1001: 2005 (max length: 3010)
+1002: 2002 (max length: 3010)
+1007: 2003 (max length: 3004)
+1003: 2002 (max length: 3010)
+1006: 2003 (max length: 3001)","1001: 2005 (max length: 3010)
+1002: 2002 (max length: 3010)
+1007: 2003 (max length: 3004)
+1003: 2002 (max length: 3010)
+1006: 2003 (max length: 3001)","[(1001, 2005, 3010), (1002, 2002, 3010), (1007, 2003, 3004), (1003, 2002, 3010), (1006, 2003, 3001)]","[(1001, 2005, 3010), (1002, 2002, 3010), (1007, 2003, 3004), (1003, 2002, 3010), (1006, 2003, 3001)]"
+Obtenha o número total de restaurantes já supridos pelo agricultor de nome “Machado de Assis”.,select count(distinct CodR) from Entrega natural join Agricultor where NomeA = 'Machado de Assis';,"SELECT COUNT(DISTINCT r.codr) AS total_restaurantes
+FROM agricultor a
+JOIN entrega e ON a.coda = e.coda
+JOIN restaurante r ON e.codr = r.codr
+WHERE a.nomea = 'Machado de Assis';",5,5,"[(5,)]","[(5,)]"
+Liste os nomes das cidades onde ao menos um agricultor ou um restaurante esteja localizado.,(select CidadeA from Agricultor) union (select CidadeR from Restaurante);,"SELECT cidade FROM (
+    SELECT cidadea AS cidade FROM agricultor
+    UNION
+    SELECT cidader AS cidade FROM restaurante
+) AS combined
+ORDER BY cidade;","Atibaia, Campinas, Diadema, Mogi das Cruzes, Osasco, Santo André, São Caetano, São Paulo, Taubaté","Campinas, Atibaia, Santo André, São Caetano, Diadema, Mogi das Cruzes, São Paulo, Taubaté, Osasco","[('Atibaia',), ('Campinas',), ('Diadema',), ('Mogi das Cruzes',), ('Osasco',), ('Santo André',), ('São Caetano',), ('São Paulo',), ('Taubaté',)]","[('Campinas',), ('Atibaia',), ('Santo André',), ('São Caetano',), ('Diadema',), ('Mogi das Cruzes',), ('São Paulo',), ('Taubaté',), ('Osasco',)]"
+Obtenha o número de produtos que são fornecidos ou por um agricultor de São Paulo ou para um restaurante em São Paulo.,select count(distinct CodP) from Entrega where CodA in (select CodA from Agricultor where CidadeA = 'São Paulo') or CodR in (select codR from Restaurante where CidadeR = 'São Paulo');,"
+SELECT COUNT(DISTINCT e.codp) AS total_produtos
+FROM entrega e
+LEFT JOIN agricultor a ON e.coda = a.coda
+LEFT JOIN restaurante r ON e.codr = r.codr
+WHERE a.cidadea = 'São Paulo'
+   OR r.cidader = 'São Paulo';
+",5,5,"[(5,)]","[(5,)]"
+"Obtenha pares do tipo (código do agricultor, código do produto) tais que o agricultor indicado nunca tenha fornecido o produto indicado.","select distinct CodA, CodP from Agricultor as A, Produto where CodP not in (select CodP from Entrega where CodA = A.CodA);","
+SELECT a.coda AS codigo_agricultor, p.codp AS codigo_produto
+FROM agricultor a
+CROSS JOIN produto p
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM entrega e
+    WHERE e.coda = a.coda 
+      AND e.codp = p.codp
+)
+ORDER BY a.coda, p.codp;
+","[(1001, 2001), (1001, 2002), (1001, 2004), (1001, 2006), (1001, 2007), (1001, 2008), (1001, 2009), (1001, 2010), (1001, 2011), (1001, 2012), (1001, 2013), (1002, 2001), (1002, 2004), (1002, 2006), (1002, 2008), (1002, 2009), (1002, 2010), (1002, 2011), (1002, 2012), (1002, 2013), (1003, 2001), (1003, 2004), (1003, 2005), (1003, 2006), (1003, 2007), (1003, 2008), (1003, 2009), (1003, 2010), (1003, 2011), (1003, 2013), (1004, 2001), (1004, 2004), (1004, 2006), (1004, 2007), (1004, 2009), (1004, 2011), (1004, 2012), (1004, 2013), (1005, 2003), (1005, 2004), (1005, 2005), (1005, 2006), (1005, 2007), (1005, 2008), (1005, 2009), (1005, 2010), (1005, 2012), (1005, 2013), (1006, 2001), (1006, 2002), (1006, 2004), (1006, 2005), (1006, 2006), (1006, 2007), (1006, 2008), (1006, 2009), (1006, 2010), (1006, 2012), (1006, 2013), (1007, 2001), (1007, 2002), (1007, 2004), (1007, 2005), (1007, 2006), (1007, 2009), (1007, 2010), (1007, 2011), (1007, 2012), (1007, 2013), (1008, 2001), (1008, 2002), (1008, 2003), (1008, 2004), (1008, 2005), (1008, 2006), (1008, 2007), (1008, 2008), (1008, 2009), (1008, 2010), (1008, 2011), (1008, 2012), (1008, 2013), (1009, 2001), (1009, 2002), (1009, 2003), (1009, 2004), (1009, 2005), (1009, 2006), (1009, 2007), (1009, 2008), (1009, 2009), (1009, 2010), (1009, 2011), (1009, 2012), (1009, 2013)]",Failed,"[(1001, 2001), (1001, 2002), (1001, 2004), (1001, 2006), (1001, 2007), (1001, 2008), (1001, 2009), (1001, 2010), (1001, 2011), (1001, 2012), (1001, 2013), (1002, 2001), (1002, 2004), (1002, 2006), (1002, 2008), (1002, 2009), (1002, 2010), (1002, 2011), (1002, 2012), (1002, 2013), (1003, 2001), (1003, 2004), (1003, 2005), (1003, 2006), (1003, 2007), (1003, 2008), (1003, 2009), (1003, 2010), (1003, 2011), (1003, 2013), (1004, 2001), (1004, 2004), (1004, 2006), (1004, 2007), (1004, 2009), (1004, 2011), (1004, 2012), (1004, 2013), (1005, 2003), (1005, 2004), (1005, 2005), (1005, 2006), (1005, 2007), (1005, 2008), (1005, 2009), (1005, 2010), (1005, 2012), (1005, 2013), (1006, 2001), (1006, 2002), (1006, 2004), (1006, 2005), (1006, 2006), (1006, 2007), (1006, 2008), (1006, 2009), (1006, 2010), (1006, 2012), (1006, 2013), (1007, 2001), (1007, 2002), (1007, 2004), (1007, 2005), (1007, 2006), (1007, 2009), (1007, 2010), (1007, 2011), (1007, 2012), (1007, 2013), (1008, 2001), (1008, 2002), (1008, 2003), (1008, 2004), (1008, 2005), (1008, 2006), (1008, 2007), (1008, 2008), (1008, 2009), (1008, 2010), (1008, 2011), (1008, 2012), (1008, 2013), (1009, 2001), (1009, 2002), (1009, 2003), (1009, 2004), (1009, 2005), (1009, 2006), (1009, 2007), (1009, 2008), (1009, 2009), (1009, 2010), (1009, 2011), (1009, 2012), (1009, 2013)]","[(1001, 2001), (1001, 2002), (1001, 2004), (1001, 2006), (1001, 2007), (1001, 2008), (1001, 2009), (1001, 2010), (1001, 2011), (1001, 2012), (1001, 2013), (1002, 2001), (1002, 2004), (1002, 2006), (1002, 2008), (1002, 2009), (1002, 2010), (1002, 2011), (1002, 2012), (1002, 2013), (1003, 2001), (1003, 2004), (1003, 2005), (1003, 2006), (1003, 2007), (1003, 2008), (1003, 2009), (1003, 2010), (1003, 2011), (1003, 2013), (1004, 2001), (1004, 2004), (1004, 2006), (1004, 2007), (1004, 2009), (1004, 2011), (1004, 2012), (1004, 2013), (1005, 2003), (1005, 2004), (1005, 2005), (1005, 2006), (1005, 2007), (1005, 2008), (1005, 2009), (1005, 2010), (1005, 2012), (1005, 2013), (1006, 2001), (1006, 2002), (1006, 2004), (1006, 2005), (1006, 2006), (1006, 2007), (1006, 2008), (1006, 2009), (1006, 2010), (1006, 2012), (1006, 2013), (1007, 2001), (1007, 2002), (1007, 2004), (1007, 2005), (1007, 2006), (1007, 2009), (1007, 2010), (1007, 2011), (1007, 2012), (1007, 2013), (1008, 2001), (1008, 2002), (1008, 2003), (1008, 2004), (1008, 2005), (1008, 2006), (1008, 2007), (1008, 2008), (1008, 2009), (1008, 2010), (1008, 2011), (1008, 2012), (1008, 2013), (1009, 2001), (1009, 2002), (1009, 2003), (1009, 2004), (1009, 2005), (1009, 2006), (1009, 2007), (1009, 2008), (1009, 2009), (1009, 2010), (1009, 2011), (1009, 2012), (1009, 2013)]"
+Obtenha os códigos dos produtos e suas respectivas quantidades médias por entrega  para os produtos que são fornecidos em uma quantidade média por entrega superior a 30 quilos.,select codP from Entrega group by codP having avg(QtdeQuilos) > 30;,"
+SELECT 
+    codp, 
+    AVG(qtdequilos) AS media_por_entrega
+FROM entrega
+GROUP BY codp
+HAVING AVG(qtdequilos) > 30;
+","[(2003, Decimal('38.0909090909090909')), (2012, Decimal('36.0000000000000000')), (2002, Decimal('34.5000000000000000')), (2010, Decimal('52.0000000000000000')), (2011, Decimal('33.5000000000000000')), (2001, Decimal('36.0000000000000000'))]","2003, 2012, 2002, 2010, 2011, 2001","[(2003, Decimal('38.0909090909090909')), (2012, Decimal('36.0000000000000000')), (2002, Decimal('34.5000000000000000')), (2010, Decimal('52.0000000000000000')), (2011, Decimal('33.5000000000000000')), (2001, Decimal('36.0000000000000000'))]","[(2003,), (2012,), (2002,), (2010,), (2011,), (2001,)]"
+"Obtenha o(s) nome(s) dos produtos mais fornecidos a restaurantes (ou seja, os produtos dos quais as somas das quantidades já entregues é a maior possível).",select NomeP from Entrega group by NomeP having sum(QtdeQuilos) = (select max(sum(QtdeQuilos)) from Entrega group by NomeP);,"
+WITH prod_totals AS (
+    SELECT p.nomep, SUM(e.qtdequilos) AS total_delivered
+    FROM entrega e
+    JOIN restaurante r ON e.codr = r.codr
+    JOIN produto p ON e.codp = p.codp
+    GROUP BY p.nomep
+)
+SELECT nomep
+FROM prod_totals
+WHERE total_delivered = (SELECT MAX(total_delivered) FROM prod_totals);
+",cebola,Failed,"[('cebola',)]","[(2003,), (2012,), (2002,), (2010,), (2011,), (2001,)]"
+Obtenha o nome do(s) agricultor(es) que fez(fizeram) a entrega de produtos mais antiga registrada no BD.,select NomeA from Entrega natural join Agricultor where DataEntrega = (select min(DataEntrega) from Entrega);,"
+SELECT a.nomea
+FROM agricultor a
+JOIN entrega e ON a.coda = e.coda
+WHERE e.dataentrega = (SELECT MIN(dataentrega) FROM entrega);
+","Ana Maria Machado, Machado de Assis","Ana Maria Machado, Machado de Assis","[('Ana Maria Machado',), ('Machado de Assis',)]","[('Ana Maria Machado',), ('Machado de Assis',)]"
+"Liste os nomes dos produtos que são oferecidos a todos os restaurantes do BD. Ou seja, um produto não deve aparecer na lista se houver um restaurante que nunca o tenha recebido.",select NomeP from Produto as P where not exists ((select CodR from Restaurante) except (select CodR from Entrega where CodP = P.CodP));,"SELECT p.nomep
+FROM produto AS p
+JOIN entrega AS e ON p.codp = e.codp
+GROUP BY p.codp, p.nomep
+HAVING COUNT(DISTINCT e.codr) = (SELECT COUNT(*) FROM restaurante);",cebola,cebola,"[('cebola',)]","[('cebola',)]"
+"Liste todos os pares possíveis do tipo (i,j) tal que i é o nome de um agricultor, j é o nome de um restaurante e i já entregou um produto para j. Mas atenção: o nome de todos os agricultores cadastrados no BD deve aparecer no conjunto resposta. Se um agricultor nunca fez uma entrega, então o seu nome deve vir acompanhado de NULL no conjunto resposta.","select NomeA, NomeR from (Entrega natural join Restaurante) natural right outer join Agricultor;","
+SELECT 
+    a.nomea AS agricultor, 
+    r.nomer AS restaurante
+FROM agricultor a
+LEFT JOIN entrega e ON a.coda = e.coda
+LEFT JOIN restaurante r ON e.codr = r.codr
+ORDER BY a.nomea, r.nomer;
+","[('Ana Maria Machado', 'A Todo Sabor'), ('Ana Maria Machado', 'RU-USP'), ('Ana Maria Machado', 'Sabor de Minas'), ('Castro Alves', None), ('Cecília Meireles', 'Bom Gosto'), ('Cecília Meireles', 'Bom de Garfo'), ('Cecília Meireles', 'Bom de Garfo'), ('Cecília Meireles', 'Panela de Ouro'), ('José de Alencar', 'A Todo Sabor'), ('José de Alencar', 'Bom Gosto'), ('José de Alencar', 'Bom de Garfo'), ('José de Alencar', 'Panela de Ouro'), ('José de Alencar', 'Sabor de Minas'), ('Lima Barreto', 'Brasileirinho'), ('Lima Barreto', 'Sabor de Minas'), ('Machado de Assis', 'A Todo Sabor'), ('Machado de Assis', 'Bom de Garfo'), ('Machado de Assis', 'Brasil a Gosto'), ('Machado de Assis', 'RU-USP'), ('Machado de Assis', 'Sabor de Minas'), ('Manuel Bandeira', 'A Todo Sabor'), ('Manuel Bandeira', 'Bom de Garfo'), ('Manuel Bandeira', 'Brasil a Gosto'), ('Manuel Bandeira', 'Prato-Cheio'), ('Manuel Bandeira', 'Sabores do Interior'), ('Monteiro Lobato', None), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas')]",Failed,"[('Ana Maria Machado', 'A Todo Sabor'), ('Ana Maria Machado', 'RU-USP'), ('Ana Maria Machado', 'Sabor de Minas'), ('Castro Alves', None), ('Cecília Meireles', 'Bom Gosto'), ('Cecília Meireles', 'Bom de Garfo'), ('Cecília Meireles', 'Bom de Garfo'), ('Cecília Meireles', 'Panela de Ouro'), ('José de Alencar', 'A Todo Sabor'), ('José de Alencar', 'Bom Gosto'), ('José de Alencar', 'Bom de Garfo'), ('José de Alencar', 'Panela de Ouro'), ('José de Alencar', 'Sabor de Minas'), ('Lima Barreto', 'Brasileirinho'), ('Lima Barreto', 'Sabor de Minas'), ('Machado de Assis', 'A Todo Sabor'), ('Machado de Assis', 'Bom de Garfo'), ('Machado de Assis', 'Brasil a Gosto'), ('Machado de Assis', 'RU-USP'), ('Machado de Assis', 'Sabor de Minas'), ('Manuel Bandeira', 'A Todo Sabor'), ('Manuel Bandeira', 'Bom de Garfo'), ('Manuel Bandeira', 'Brasil a Gosto'), ('Manuel Bandeira', 'Prato-Cheio'), ('Manuel Bandeira', 'Sabores do Interior'), ('Monteiro Lobato', None), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas')]","[('Ana Maria Machado', 'A Todo Sabor'), ('Machado de Assis', 'RU-USP'), ('Lima Barreto', 'Sabor de Minas'), ('Manuel Bandeira', 'Prato-Cheio'), ('Machado de Assis', 'Brasil a Gosto'), ('Cecília Meireles', 'Bom Gosto'), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('José de Alencar', 'A Todo Sabor'), ('José de Alencar', 'Bom de Garfo'), ('Machado de Assis', 'Bom de Garfo'), ('Cecília Meireles', 'Panela de Ouro'), ('José de Alencar', 'Sabor de Minas'), ('José de Alencar', 'Panela de Ouro'), ('Machado de Assis', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('Ana Maria Machado', 'Sabor de Minas'), ('Manuel Bandeira', 'A Todo Sabor'), ('Manuel Bandeira', 'Bom de Garfo'), ('Cecília Meireles', 'Bom de Garfo'), ('Lima Barreto', 'Brasileirinho'), ('José de Alencar', 'Bom Gosto'), ('Ana Maria Machado', 'RU-USP'), ('Cecília Meireles', 'Bom de Garfo'), ('Manuel Bandeira', 'Sabores do Interior'), ('Manuel Bandeira', 'Brasil a Gosto'), ('Machado de Assis', 'A Todo Sabor'), ('Monteiro Lobato', None), ('Castro Alves', None)]"

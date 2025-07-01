@@ -1,0 +1,398 @@
+instance_id,instruction,db_id,db_schema,gold_ignore_order,gold_sql,llm_query,llm_executed_query_results,gold_sql_results
+mbd_p2_e3_a,Liste os nomes dos restaurantes que ficam em Santo André.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select NomeR from Restaurante where CidadeR = 'Santo André';,SELECT NomeR FROM Restaurante WHERE CidadeR = 'Santo André';,Sabor de Minas,"[('Sabor de Minas',)]"
+mbd_p2_e3_b,"Liste todas as informações dos produtos cujo nome começa com a letra “c” e cujo preço por quilo é inferior a R$3,00.",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select * from Produto where (NomeP like 'c%' or NomeP like 'C%') and PrecoQuilo < 3;,"SELECT *  
+FROM Produto  
+WHERE NomeP LIKE 'c%'  
+  AND PrecoQuilo < 3.00;","2003: cebola (max length: 2.98)
+2004: cenoura (max length: 1.98)
+2005: chuchu (max length: 2.49)","[(2003, 'cebola', Decimal('2.98')), (2004, 'cenoura', Decimal('1.98')), (2005, 'chuchu', Decimal('2.49'))]"
+mbd_p2_e3_c,Liste os códigos dos agricultores que já entregaram produtos para o restaurante RU-USP,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select CodA from Entrega natural join Restaurante where NomeR = 'RU-USP';,"SELECT DISTINCT a.CodA, a.NomeA  
+FROM Agricultor a  
+JOIN Entrega e ON a.CodA = e.CodA  
+JOIN Restaurante r ON e.CodR = r.CodR  
+WHERE r.NomeR = 'RU-USP';","[(1001, 'Ana Maria Machado'), (1004, 'Machado de Assis')]","[(1004,), (1001,)]"
+mbd_p2_e3_d,Liste os nomes dos produtos que já foram alguma vez entregues por um agricultor de Mogi das Cruzes.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select distinct NomeP from Entrega natural join Produto natural join Agricultor where CidadeA = 'Mogi das Cruzes';,"  
+SELECT DISTINCT P.NomeP  
+FROM Produto P  
+JOIN Entrega E ON P.CodP = E.CodP  
+JOIN Agricultor A ON E.CodA = A.CodA  
+WHERE A.CidadeA = 'Mogi das Cruzes'  
+ORDER BY P.NomeP;  
+","alface, batata, cebola, chuchu, couve-flor","[('alface',), ('batata',), ('cebola',), ('chuchu',), ('couve-flor',)]"
+mbd_p2_e3_e,Liste os códigos dos agricultores que já entregaram batatas e também já entregaram cebolas.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,"(select CodA from Entrega natural join Produto where NomeP = 'batata')
+intersect
+(select CodA from Entrega natural join Produto where NomeP = 'cebola');","  
+SELECT a.CodA, a.NomeA, a.CidadeA  
+FROM Agricultor a  
+JOIN Entrega e ON a.CodA = e.CodA  
+JOIN Produto p ON e.CodP = p.CodP  
+WHERE p.NomeP IN ('potatoes', 'onions')  
+GROUP BY a.CodA, a.NomeA, a.CidadeA  
+HAVING COUNT(DISTINCT p.NomeP) = 2;  
+",,"[(1002,), (1004,), (1003,)]"
+mbd_p2_e3_f,"Liste os códigos dos agricultores que já entregaram batatas, mas nunca entregaram cebolas.",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,"(select CodA from Entrega natural join Produto where NomeP = 'batata')
+except
+(select CodA from Entrega natural join Produto where NomeP = 'cebola');","  
+SELECT DISTINCT e.CodA  
+FROM Entrega e  
+JOIN Produto p ON e.CodP = p.CodP  
+WHERE p.NomeP = 'batatas'  
+  AND e.CodA NOT IN (  
+    SELECT e2.CodA  
+    FROM Entrega e2  
+    JOIN Produto p2 ON e2.CodP = p2.CodP  
+    WHERE p2.NomeP = 'cebolas'  
+  );  
+",,"[(1005,)]"
+mbd_p2_e3_g,"Liste todas as triplas (código do agricultor, código do produto, código do restaurante) extraídas de Entrega tais que o agricultor e o restaurante estejam na mesma cidade.",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,"select CodA, CodP, codR from Entrega natural join Agricultor natural join Restaurante where CidadeA = CidadeR;","  
+SELECT  
+    E.CodA,  
+    E.CodP,  
+    E.CodR  
+FROM  
+    Entrega AS E  
+JOIN  
+    Agricultor AS A ON E.CodA = A.CodA  
+JOIN  
+    Restaurante AS R ON E.CodR = R.CodR  
+WHERE  
+    A.CidadeA = R.CidadeR;  
+","1001: 2005 (max length: 3010)
+1002: 2002 (max length: 3010)
+1007: 2003 (max length: 3004)
+1003: 2002 (max length: 3010)
+1006: 2003 (max length: 3001)","[(1001, 2005, 3010), (1002, 2002, 3010), (1007, 2003, 3004), (1003, 2002, 3010), (1006, 2003, 3001)]"
+mbd_p2_e3_h,Obtenha o número total de restaurantes já supridos pelo agricultor “Machado de Assis”.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select count(distinct CodR) from Entrega natural join Agricultor where NomeA = 'Machado de Assis';,"  
+SELECT COUNT(DISTINCT R.CodR) AS TotalRestaurantesAtendidos  
+FROM Agricultor A  
+JOIN Entrega E ON A.CodA = E.CodA  
+JOIN Restaurante R ON E.CodR = R.CodR  
+WHERE A.NomeA = 'Machado de Assis';  
+",5,"[(5,)]"
+mbd_p2_e3_i,Liste os nomes das cidades onde ao menos um agricultor ou um restaurante esteja localizado.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,(select CidadeA from Agricultor) union (select CidadeR from Restaurante);,"SELECT DISTINCT City FROM (
+    SELECT CidadeA AS City FROM Agricultor
+    UNION
+    SELECT CidadeR AS City FROM Restaurante
+) AS AllCities;","Taubaté, Diadema, Osasco, Mogi das Cruzes, Atibaia, Santo André, Campinas, São Paulo, São Caetano","[('Campinas',), ('Atibaia',), ('Santo André',), ('São Caetano',), ('Diadema',), ('Mogi das Cruzes',), ('São Paulo',), ('Taubaté',), ('Osasco',)]"
+mbd_p2_e3_j,Obtenha o número de produtos que são fornecidos ou por um agricultor de São Paulo ou para um restaurante em São Paulo.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select count(distinct CodP) from Entrega where CodA in (select CodA from Agricultor where CidadeA = 'São Paulo') or CodR in (select codR from Restaurante where CidadeR = 'São Paulo');,"SELECT COUNT(DISTINCT P.CodP) AS NumeroProdutos 
+FROM Entrega E 
+JOIN Agricultor A ON E.CodA = A.CodA 
+JOIN Restaurante R ON E.CodR = R.CodR 
+JOIN Produto P ON E.CodP = P.CodP 
+WHERE A.CidadeA = 'São Paulo' 
+   OR R.CidadeR = 'São Paulo';",5,"[(5,)]"
+mbd_p2_e3_k,"Obtenha pares do tipo (código do agricultor, código do produto) tais que o agricultor indicado nunca tenha fornecido o produto indicado.",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,"select distinct CodA, CodP from Agricultor as A, Produto where CodP not in (select CodP from Entrega where CodA = A.CodA);","  
+SELECT a.CodA, p.CodP  
+FROM Agricultor a  
+CROSS JOIN Produto p  
+WHERE NOT EXISTS (  
+    SELECT 1  
+    FROM Entrega e  
+    WHERE e.CodA = a.CodA  
+      AND e.CodP = p.CodP  
+);  
+","[(1001, 2001), (1002, 2001), (1003, 2001), (1004, 2001), (1006, 2001), (1007, 2001), (1008, 2001), (1009, 2001), (1001, 2002), (1006, 2002), (1007, 2002), (1008, 2002), (1009, 2002), (1005, 2003), (1008, 2003), (1009, 2003), (1001, 2004), (1002, 2004), (1003, 2004), (1004, 2004), (1005, 2004), (1006, 2004), (1007, 2004), (1008, 2004), (1009, 2004), (1003, 2005), (1005, 2005), (1006, 2005), (1007, 2005), (1008, 2005), (1009, 2005), (1001, 2006), (1002, 2006), (1003, 2006), (1004, 2006), (1005, 2006), (1006, 2006), (1007, 2006), (1008, 2006), (1009, 2006), (1001, 2007), (1003, 2007), (1004, 2007), (1005, 2007), (1006, 2007), (1008, 2007), (1009, 2007), (1001, 2008), (1002, 2008), (1003, 2008), (1005, 2008), (1006, 2008), (1008, 2008), (1009, 2008), (1001, 2009), (1002, 2009), (1003, 2009), (1004, 2009), (1005, 2009), (1006, 2009), (1007, 2009), (1008, 2009), (1009, 2009), (1001, 2010), (1002, 2010), (1003, 2010), (1005, 2010), (1006, 2010), (1007, 2010), (1008, 2010), (1009, 2010), (1001, 2011), (1002, 2011), (1003, 2011), (1004, 2011), (1007, 2011), (1008, 2011), (1009, 2011), (1001, 2012), (1002, 2012), (1004, 2012), (1005, 2012), (1006, 2012), (1007, 2012), (1008, 2012), (1009, 2012), (1001, 2013), (1002, 2013), (1003, 2013), (1004, 2013), (1005, 2013), (1006, 2013), (1007, 2013), (1008, 2013), (1009, 2013)]","[(1001, 2001), (1001, 2002), (1001, 2004), (1001, 2006), (1001, 2007), (1001, 2008), (1001, 2009), (1001, 2010), (1001, 2011), (1001, 2012), (1001, 2013), (1002, 2001), (1002, 2004), (1002, 2006), (1002, 2008), (1002, 2009), (1002, 2010), (1002, 2011), (1002, 2012), (1002, 2013), (1003, 2001), (1003, 2004), (1003, 2005), (1003, 2006), (1003, 2007), (1003, 2008), (1003, 2009), (1003, 2010), (1003, 2011), (1003, 2013), (1004, 2001), (1004, 2004), (1004, 2006), (1004, 2007), (1004, 2009), (1004, 2011), (1004, 2012), (1004, 2013), (1005, 2003), (1005, 2004), (1005, 2005), (1005, 2006), (1005, 2007), (1005, 2008), (1005, 2009), (1005, 2010), (1005, 2012), (1005, 2013), (1006, 2001), (1006, 2002), (1006, 2004), (1006, 2005), (1006, 2006), (1006, 2007), (1006, 2008), (1006, 2009), (1006, 2010), (1006, 2012), (1006, 2013), (1007, 2001), (1007, 2002), (1007, 2004), (1007, 2005), (1007, 2006), (1007, 2009), (1007, 2010), (1007, 2011), (1007, 2012), (1007, 2013), (1008, 2001), (1008, 2002), (1008, 2003), (1008, 2004), (1008, 2005), (1008, 2006), (1008, 2007), (1008, 2008), (1008, 2009), (1008, 2010), (1008, 2011), (1008, 2012), (1008, 2013), (1009, 2001), (1009, 2002), (1009, 2003), (1009, 2004), (1009, 2005), (1009, 2006), (1009, 2007), (1009, 2008), (1009, 2009), (1009, 2010), (1009, 2011), (1009, 2012), (1009, 2013)]"
+mbd_p2_e3_l,Obtenha os códigos dos produtos e suas respectivas quantidades médias por entrega para os produtos que são fornecidos em uma quantidade média por entrega superior a 30 quilos.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select codP from Entrega group by codP having avg(QtdeQuilos) > 30;,"SELECT p.CodP, p.NomeP, AVG(e.QtdeQuilos) AS MediaQtdeQuilos  
+FROM Entrega e  
+JOIN Produto p ON e.CodP = p.CodP  
+GROUP BY p.CodP, p.NomeP  
+HAVING AVG(e.QtdeQuilos) > 30;","2011: beterraba (max length: 33.5000000000000000)
+2001: tomate (max length: 36.0000000000000000)
+2012: alface (max length: 36.0000000000000000)
+2010: repolho (max length: 52.0000000000000000)
+2003: cebola (max length: 38.0909090909090909)
+2002: batata (max length: 34.5000000000000000)","[(2003,), (2012,), (2002,), (2010,), (2011,), (2001,)]"
+mbd_p2_e3_m,"Obtenha o(s) nome(s) dos produtos mais fornecidos a restaurantes (ou seja, os produtos dos quais as somas das quantidades já entregues é a maior possível).",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select NomeP from Entrega natural join Produto group by NomeP having sum(QtdeQuilos) >= ALL (select sum(QtdeQuilos) from Entrega group by CodP);,"  
+SELECT 
+    p.NomeP AS ""Nome do Produto"", 
+    SUM(e.QtdeQuilos) AS ""Quantidade Total Entregue""
+FROM 
+    Produto AS p
+INNER JOIN 
+    Entrega AS e ON p.CodP = e.CodP
+GROUP BY 
+    p.NomeP
+ORDER BY 
+    SUM(e.QtdeQuilos) DESC;  
+","[('cebola', 419), ('batata', 138), ('chuchu', 78), ('beterraba', 67), ('couve-flor', 57), ('quiabo', 57), ('repolho', 52), ('tomate', 36), ('alface', 36)]","[('cebola',)]"
+mbd_p2_e3_n,Obtenha o nome do(s) agricultor(es) que fez(fizeram) a entrega de produtos mais antiga registrada no BD.,cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,select NomeA from Entrega natural join Agricultor where DataEntrega = (select min(DataEntrega) from Entrega);,"  
+SELECT DISTINCT a.NomeA  
+FROM Agricultor a  
+JOIN Entrega e ON a.CodA = e.CodA  
+WHERE e.DataEntrega = (SELECT MIN(DataEntrega) FROM Entrega);  
+","Ana Maria Machado, Machado de Assis","[('Ana Maria Machado',), ('Machado de Assis',)]"
+mbd_p2_e3_o,"Liste os nomes dos produtos que são oferecidos a todos os restaurantes do BD. Ou seja, um produto não deve aparecer na lista se houver um restaurante que nunca o tenha recebido.",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,"select NomeP from Produto as P where not exists (
+	(select CodR from Restaurante)
+	except
+	(select CodR from Entrega where CodP = P.CodP));","SELECT p.NomeP  
+FROM Produto p  
+JOIN Entrega e ON p.CodP = e.CodP  
+GROUP BY p.CodP, p.NomeP  
+HAVING COUNT(DISTINCT e.CodR) = (SELECT COUNT(*) FROM Restaurante);",cebola,"[('cebola',)]"
+mbd_p2_e3_p,"Liste todos os pares possíveis do tipo (i,j) tal que i é o nome de um agricultor, j é o nome de um restaurante e i já entregou um produto para j. Mas atenção: o nome de todos os agricultores cadastrados no BD deve aparecer no conjunto resposta. Se um agricultor nunca fez uma entrega, então o seu nome deve vir acompanhado de NULL no conjunto resposta",cooperagri,"Agricultor(CodA: integer, NomeA: string, CidadeA: string)
+Produto(CodP: integer, NomeP: string, PrecoQuilo: real)
+Restaurante( CodR : integer, NomeR:string, CidadeR: string)
+Entrega(CodA: integer, CodP: integer, CodR: integer, DataEntrega: date, QtdeQuilos: integer)",True,"select NomeA, NomeR from (Entrega natural join Restaurante) natural right outer join Agricultor;","  
+SELECT  
+    A.NomeA,  
+    R.NomeR  
+FROM Agricultor A  
+LEFT JOIN Entrega E ON A.CodA = E.CodA  
+LEFT JOIN Restaurante R ON E.CodR = R.CodR;  
+","[('Ana Maria Machado', 'A Todo Sabor'), ('Machado de Assis', 'RU-USP'), ('Lima Barreto', 'Sabor de Minas'), ('Manuel Bandeira', 'Prato-Cheio'), ('Machado de Assis', 'Brasil a Gosto'), ('Cecília Meireles', 'Bom Gosto'), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('José de Alencar', 'A Todo Sabor'), ('José de Alencar', 'Bom de Garfo'), ('Machado de Assis', 'Bom de Garfo'), ('Cecília Meireles', 'Panela de Ouro'), ('José de Alencar', 'Sabor de Minas'), ('José de Alencar', 'Panela de Ouro'), ('Machado de Assis', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('Ana Maria Machado', 'Sabor de Minas'), ('Manuel Bandeira', 'A Todo Sabor'), ('Manuel Bandeira', 'Bom de Garfo'), ('Cecília Meireles', 'Bom de Garfo'), ('Lima Barreto', 'Brasileirinho'), ('José de Alencar', 'Bom Gosto'), ('Ana Maria Machado', 'RU-USP'), ('Cecília Meireles', 'Bom de Garfo'), ('Manuel Bandeira', 'Sabores do Interior'), ('Manuel Bandeira', 'Brasil a Gosto'), ('Machado de Assis', 'A Todo Sabor'), ('Monteiro Lobato', None), ('Castro Alves', None)]","[('Ana Maria Machado', 'A Todo Sabor'), ('Machado de Assis', 'RU-USP'), ('Lima Barreto', 'Sabor de Minas'), ('Manuel Bandeira', 'Prato-Cheio'), ('Machado de Assis', 'Brasil a Gosto'), ('Cecília Meireles', 'Bom Gosto'), ('Oswald de Andrade', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('José de Alencar', 'A Todo Sabor'), ('José de Alencar', 'Bom de Garfo'), ('Machado de Assis', 'Bom de Garfo'), ('Cecília Meireles', 'Panela de Ouro'), ('José de Alencar', 'Sabor de Minas'), ('José de Alencar', 'Panela de Ouro'), ('Machado de Assis', 'Sabor de Minas'), ('Oswald de Andrade', 'Sabor de Minas'), ('Ana Maria Machado', 'Sabor de Minas'), ('Manuel Bandeira', 'A Todo Sabor'), ('Manuel Bandeira', 'Bom de Garfo'), ('Cecília Meireles', 'Bom de Garfo'), ('Lima Barreto', 'Brasileirinho'), ('José de Alencar', 'Bom Gosto'), ('Ana Maria Machado', 'RU-USP'), ('Cecília Meireles', 'Bom de Garfo'), ('Manuel Bandeira', 'Sabores do Interior'), ('Manuel Bandeira', 'Brasil a Gosto'), ('Machado de Assis', 'A Todo Sabor'), ('Monteiro Lobato', None), ('Castro Alves', None)]"
+mbd_p2_p1_a,Encontre o nome de todos os Juniores (nível = JR) que estão matriculados em um curso ministrado por Ivana Teach.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select A.nomeAluno
+from Aluno as A, Curso as C, Professor as P, Matriculado as M
+where A.nivel='JR'
+and P.nomeProf = 'Ivana Teach'
+and C.idProf = P.idProf
+and M.nomeCurso = C.nome
+and M.nroAluno = A.nroAluno;","
+SELECT DISTINCT A.nroAluno,
+                A.nomeAluno,
+                A.formação,
+                A.nivel,
+                A.idade
+FROM Aluno A
+JOIN Matriculado M ON A.nroAluno = M.nroAluno
+JOIN Curso C ON M.nomeCurso = C.nome
+JOIN Professor P ON C.idProf = P.idProf
+WHERE A.nivel = 'JR'
+  AND P.nomeProf = 'Ivana Teach';
+",Failed,"[('Christopher Garcia',), ('Paul Hall',)]"
+mbd_p2_p1_b,Encontre o nome do aluno mais velho que é formado em History ou matriculado em um curso ministrado pelo Ivana Teach.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nomeAluno
+from Aluno
+where formacao = 'History'
+or nroAluno in (
+select A2.nroALuno
+from Aluno as A2, Curso as C, Professor as P, Matriculado as M
+where P.nomeProf = 'Ivana Teach'
+and C.idProf = P.idProf
+and M.nomeCurso = C.nome
+and M.nroAluno = A2.nroAluno)
+and idade >= all (
+select A1.idade
+from Aluno as A1
+where A1.formacao = 'History' or
+ A1.nroAluno in (
+select A2.nroALuno
+from Aluno as A2, Curso as C, Professor as P, Matriculado as M
+where P.nomeProf = 'Ivana Teach'
+and C.idProf = P.idProf
+and M.nomeCurso = C.nome
+and M.nroAluno = A2.nroAluno));","  
+SELECT A.nomeAluno  
+FROM Aluno A  
+WHERE A.formação = 'História'  
+   OR EXISTS (  
+        SELECT 1  
+        FROM Matriculado M  
+        JOIN Curso C ON M.nomeCurso = C.nome  
+        JOIN Professor P ON C.idProf = P.idProf  
+        WHERE M.nroAluno = A.nroAluno  
+          AND P.nomeProf = 'Ivana Teach'  
+   )  
+ORDER BY A.idade DESC  
+LIMIT 1;  
+",Failed,"[('Christopher Garcia',), ('Angela Martinez',)]"
+mbd_p2_p1_c,Encontre os nomes de todos os cursos que são ministrados na sala R128 ou que têm 3 ou mais alunos matriculados.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nome
+from Curso as C
+where sala = 'R128' or
+(select count(distinct nroAluno)
+ from Matriculado where nomeCurso = C.nome) >= 3;","SELECT DISTINCT nome  
+FROM Curso  
+WHERE sala = 'R128'  
+   OR nome IN (  
+       SELECT nomeCurso  
+       FROM Matriculado  
+       GROUP BY nomeCurso  
+       HAVING COUNT(nroAluno) >= 3  
+   );","Operating System Design, Database Systems, Dairy Herd Management, Patent Law, Data Structures, Intoduction to Math, Archaeology of the Incas","[('Data Structures',), ('Database Systems',), ('Operating System Design',), ('Archaeology of the Incas',), ('Patent Law',), ('Dairy Herd Management',), ('Intoduction to Math',)]"
+mbd_p2_p1_d,Encontre os nomes de todos os alunos que estão matriculados em dois cursos que são ministrados no mesmo horário.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nomeAluno
+from Aluno
+where nroAluno in
+(select M1.nroAluno
+from Matriculado as M1, Matriculado as M2, Curso as C1, Curso as C2
+where M1.nroAluno = M2.nroAluno
+and M1.nomeCurso <> M2.nomeCurso
+and M1.nomeCurso = C1.nome
+and M2.nomeCurso = C2.nome
+and C1.horario = C2.horario);","  
+SELECT DISTINCT a.nomeAluno  
+FROM Matriculado m1  
+JOIN Matriculado m2   
+  ON m1.nroAluno = m2.nroAluno AND m1.nomeCurso <> m2.nomeCurso  
+JOIN Curso c1   
+  ON m1.nomeCurso = c1.nome  
+JOIN Curso c2  
+  ON m2.nomeCurso = c2.nome AND c1.horario = c2.horario  
+JOIN Aluno a   
+  ON m1.nroAluno = a.nroAluno;  
+",Luis Hernandez,"[('Luis Hernandez',)]"
+mbd_p2_p1_e,Encontre os nomes dos professores para os quais a quantidade de alunos na lista de matriculados de ao menos um dos cursos que eles ministram é menor do que 2.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nomeProf
+from professor as P, curso as C
+where P.idProf = C.idProf and
+(select count(nroAluno) from Matriculado
+where C.nome = nomeCurso) < 2;","  
+SELECT DISTINCT p.nomeProf  
+FROM Professor p  
+WHERE p.idProf IN (  
+    SELECT c.idProf  
+    FROM Curso c  
+    LEFT JOIN Matriculado m ON c.nome = m.nomeCurso  
+    GROUP BY c.nome, c.idProf  
+    HAVING COUNT(m.nroAluno) < 2  
+);  
+","Richard Jackson, Mary Johnson, Jennifer Thomas, Patricia Jones, Linda Davis, Elizabeth Taylor, Barbara Wilson, Robert Brown, John Williams, William Moore","[('Linda Davis',), ('Barbara Wilson',), ('John Williams',), ('John Williams',), ('Barbara Wilson',), ('Jennifer Thomas',), ('William Moore',), ('Richard Jackson',), ('Elizabeth Taylor',), ('Elizabeth Taylor',), ('Richard Jackson',), ('Richard Jackson',), ('Richard Jackson',), ('Richard Jackson',), ('John Williams',), ('Robert Brown',), ('Mary Johnson',), ('Patricia Jones',), ('Richard Jackson',)]"
+mbd_p2_p1_f,"Para cada valor de nível que aparece em Aluno, imprima o nível e idade média dos alunos desse nível.",alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nivel, avg(idade) as idadeMedia
+from aluno group by nivel;","  
+SELECT nivel, AVG(idade) AS average_age  
+FROM Aluno  
+GROUP BY nivel;  
+","[('JR', Decimal('19.5000000000000000')), ('SR', Decimal('20.7142857142857143')), ('FR', Decimal('17.6666666666666667')), ('SO', Decimal('18.4000000000000000'))]","[('JR', Decimal('19.5000000000000000')), ('SR', Decimal('20.7142857142857143')), ('FR', Decimal('17.6666666666666667')), ('SO', Decimal('18.4000000000000000'))]"
+mbd_p2_p1_g,"Para cada valor de nível que aparece em Aluno exceto JR, imprima o nível e idade média dos alunos desse nível.",alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nivel, avg(idade) as idadeMedia
+from aluno group by nivel having nivel <> 'JR';","SELECT nivel, AVG(idade) AS average_age  
+FROM Aluno  
+WHERE nivel <> 'JR'  
+GROUP BY nivel;","[('SR', Decimal('20.7142857142857143')), ('FR', Decimal('17.6666666666666667')), ('SO', Decimal('18.4000000000000000'))]","[('SR', Decimal('20.7142857142857143')), ('FR', Decimal('17.6666666666666667')), ('SO', Decimal('18.4000000000000000'))]"
+mbd_p2_p1_h,"Para cada professor que ministra cursos apenas na sala R128, imprima seu nome e o número total de cursos que ele ou ela ministra.",alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nomeProf, numeroCursos
+from professor natural join
+(select idProf, count(*) as numeroCursos from curso
+ where idProf not in (select idProf from curso where sala <> 'R128')
+ group by idProf) as C;","  
+SELECT p.nomeProf,  
+       COUNT(c.nome) AS total_courses  
+FROM Professor p  
+JOIN Curso c ON p.idProf = c.idProf  
+GROUP BY p.nomeProf  
+HAVING MIN(c.sala) = 'R128' AND MAX(c.sala) = 'R128';  
+","[('Robert Brown', 1)]","[('Robert Brown', 1)]"
+mbd_p2_p1_i,Encontre os nomes dos alunos matriculados no número máximo de cursos.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nomeAluno from Aluno where nroAluno in
+(select nroAluno from Matriculado group by nroAluno
+ having count(*) >= all
+ (select count(nomeCurso) from Matriculado group by nroAluno));","  
+WITH course_counts AS (  
+    SELECT nroAluno, COUNT(*) AS total_courses  
+    FROM Matriculado  
+    GROUP BY nroAluno  
+),  
+max_courses AS (  
+    SELECT MAX(total_courses) AS max_total  
+    FROM course_counts  
+)  
+SELECT A.nomeAluno  
+FROM Aluno A  
+JOIN course_counts CC ON A.nroAluno = CC.nroAluno  
+JOIN max_courses MC ON CC.total_courses = MC.max_total;  
+","Ana Lopez, Juan Rodriguez","[('Ana Lopez',), ('Juan Rodriguez',)]"
+mbd_p2_p1_j,Encontre os nomes dos alunos matriculados em nenhum curso.,alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select nomeAluno
+from Aluno
+where nroAluno not in
+(select nroAluno
+from Matriculado);","SELECT a.nomeAluno  
+FROM Aluno a  
+LEFT JOIN Matriculado m ON a.nroAluno = m.nroAluno  
+WHERE m.nroAluno IS NULL  
+ORDER BY a.nomeAluno;","Angela Martinez, Charles Harris, Daniel Lee, Donald King, Dorthy Lewis, Edward Baker, George Wright, Margaret Clark, Maria White, Mark Young, Nancy Allen, Steven Green, Thomas Robinson","[('Maria White',), ('Charles Harris',), ('Angela Martinez',), ('Thomas Robinson',), ('Margaret Clark',), ('Dorthy Lewis',), ('Daniel Lee',), ('Nancy Allen',), ('Mark Young',), ('Donald King',), ('George Wright',), ('Steven Green',), ('Edward Baker',)]"
+mbd_p2_p1_k,"Para cada valor de idade que aparece em Aluno, encontre o valor do nível que aparece com mais frequência. Por exemplo, se houver mais alunos no nível FR com idade 18 do que os alunos com idade 18 dos níveis SR, JR ou SO, você deve imprimir o par (18,FR).",alunos,"Aluno(nroAluno: integer, nomeAluno: string, formação: string, nivel: string, idade: integer)
+Curso(nome: string, horario: string, sala: string, idProf: integer)
+Matriculado(nroAluno: integer, nomeCurso: string)
+Professor(idProf: integer, nomeProf: string, idDepto: integer)",True,"select idade, nivel from Aluno as A group by idade, nivel
+having count(nivel) >= all
+(select count(*) from Aluno where idade = A.idade group by nivel);","  
+WITH AgeLevelCount AS (  
+    SELECT  
+        idade,  
+        nivel,  
+        COUNT(*) AS level_count  
+    FROM Aluno  
+    GROUP BY idade, nivel  
+),  
+RankedLevels AS (  
+    SELECT  
+        idade,  
+        nivel,  
+        level_count,  
+        ROW_NUMBER() OVER (PARTITION BY idade ORDER BY level_count DESC) AS rn  
+    FROM AgeLevelCount  
+)  
+SELECT  
+    idade,  
+    nivel  
+FROM RankedLevels  
+WHERE rn = 1;  
+","[(Decimal('17'), 'FR'), (Decimal('18'), 'FR'), (Decimal('19'), 'SO'), (Decimal('20'), 'JR'), (Decimal('21'), 'SR'), (Decimal('22'), 'SR')]","[(Decimal('17'), 'FR'), (Decimal('18'), 'FR'), (Decimal('21'), 'SR'), (Decimal('20'), 'JR'), (Decimal('19'), 'SO'), (Decimal('22'), 'SR')]"
