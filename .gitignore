@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+*events.out*
+
 *.xml
 *.jpg
 *.tar.gz
