@@ -1,0 +1,33 @@
+.base-siga-twitter {
+    position: fixed;
+    right: 0;
+    top: 166px;
+    z-index: 9999999;
+    height: 34px;
+    overflow: hidden;
+    transition: .3s;
+    transition-timing-function: ease-in-out;
+}
+
+
+@media all and (max-width: 768px){
+
+.sc-eDLKkx, .bNHlXK {
+    position: fixed;
+    z-index: 1000000;
+    top: 200px;
+    right: 0px;
+    pointer-events: auto;
+    bottom: 0px;
+    top: 50%!important;
+}
+
+.base-siga-twitter {
+        top: 50%!important;
+        margin-top: -38px!important;
+        width: 38px;
+        height: 38px;
+        overflow: hidden;
+        z-index: 9999;
+}
+}

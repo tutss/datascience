@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Triplet Loss Visualization</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0 40px 0;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .control-label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        .slider {
+            width: 120px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .loss-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        .loss-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .loss-equation {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .visualization-area {
+            position: relative;
+            height: 200px;
+            margin: 40px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .distance-track {
+            position: absolute;
+            top: 50%;
+            left: 60px;
+            right: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+        .point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        .anchor {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            left: 80px;
+        }
+        .positive {
+            background: linear-gradient(45deg, #059669, #10b981);
+            left: 200px;
+        }
+        .negative {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+            cursor: grab;
+            transition: transform 0.1s ease;
+        }
+        .negative:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .negative:active {
+            cursor: grabbing;
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        .region-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        .hard-region {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.6), rgba(220, 38, 38, 0.6));
+            left: 60px;
+        }
+        .semi-hard-region {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.6), rgba(217, 119, 6, 0.6));
+        }
+        .easy-region {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.6), rgba(21, 128, 61, 0.6));
+            right: 60px;
+        }
+        .point-label {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .distance-label {
+            position: absolute;
+            bottom: -30px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .instructions {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .hard-status { background: rgba(239, 68, 68, 0.8); }
+        .semi-hard-status { background: rgba(245, 158, 11, 0.8); }
+        .easy-status { background: rgba(34, 197, 94, 0.8); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Interactive Triplet Loss Visualization</div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-label">Margin (m)</div>
+                <input type="range" id="marginSlider" class="slider" min="0.1" max="2" step="0.1" value="0.8">
+                <div id="marginValue">0.8</div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">Distance d(a,p)</div>
+                <div id="apDistance">1.2</div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">Distance d(a,n)</div>
+                <div id="anDistance">2.5</div>
+            </div>
+        </div>
+        
+        <div class="loss-display">
+            <div class="loss-value" id="lossValue">0.00</div>
+            <div class="loss-equation" id="lossEquation">L = max(0, 0.8 + 1.2 - 2.5) = max(0, -0.5) = 0.00</div>
+            <span id="statusIndicator" class="status-indicator easy-status">Easy Negative</span>
+        </div>
+        
+        <div class="instructions">
+            🎯 <strong>Drag the red negative point</strong> to see how triplet loss changes • Adjust margin with the slider above
+        </div>
+        
+        <div class="visualization-area" id="visualArea">
+            <div class="distance-track"></div>
+            
+            <!-- Regions -->
+            <div class="region-overlay hard-region" id="hardRegion"></div>
+            <div class="region-overlay semi-hard-region" id="semiHardRegion"></div>
+            <div class="region-overlay easy-region" id="easyRegion"></div>
+            
+            <!-- Points -->
+            <div class="point anchor">
+                <div class="point-label">a</div>
+                <div class="distance-label" style="left: 50%; transform: translateX(-50%);">anchor</div>
+            </div>
+            
+            <div class="point positive">
+                <div class="point-label">p</div>
+                <div class="distance-label" style="left: 50%; transform: translateX(-50%);">positive</div>
+            </div>
+            
+            <div class="point negative" id="negativePoint">
+                <div class="point-label">n</div>
+                <div class="distance-label" style="left: 50%; transform: translateX(-50%);">negative</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const marginSlider = document.getElementById('marginSlider');
+        const marginValue = document.getElementById('marginValue');
+        const negativePoint = document.getElementById('negativePoint');
+        const visualArea = document.getElementById('visualArea');
+        const lossValue = document.getElementById('lossValue');
+        const lossEquation = document.getElementById('lossEquation');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const apDistance = document.getElementById('apDistance');
+        const anDistance = document.getElementById('anDistance');
+        const hardRegion = document.getElementById('hardRegion');
+        const semiHardRegion = document.getElementById('semiHardRegion');
+        const easyRegion = document.getElementById('easyRegion');
+        
+        let isDragging = false;
+        let margin = 0.8;
+        const anchorX = 80;
+        const positiveX = 200;
+        const trackStart = 60;
+        const trackEnd = visualArea.offsetWidth - 60;
+        const distanceUnit = (trackEnd - trackStart) / 10; // 10 units across track
+        
+        // Fixed d(a,p) distance
+        const dAP = (positiveX - anchorX) / distanceUnit;
+        
+        function updateRegions() {
+            const hardEnd = positiveX;
+            const semiHardEnd = positiveX + (margin * distanceUnit);
+            
+            hardRegion.style.width = `${hardEnd - trackStart}px`;
+            semiHardRegion.style.left = `${hardEnd}px`;
+            semiHardRegion.style.width = `${semiHardEnd - hardEnd}px`;
+            easyRegion.style.left = `${semiHardEnd}px`;
+            easyRegion.style.width = `${trackEnd - semiHardEnd}px`;
+        }
+        
+        function updateLoss() {
+            const negativeX = parseInt(negativePoint.style.left) || 300;
+            const dAN = Math.abs(negativeX - anchorX) / distanceUnit;
+            
+            const loss = Math.max(0, margin + dAP - dAN);
+            
+            // Update displays
+            lossValue.textContent = loss.toFixed(2);
+            lossValue.style.color = loss > 0 ? '#ef4444' : '#22c55e';
+            
+            apDistance.textContent = dAP.toFixed(2);
+            anDistance.textContent = dAN.toFixed(2);
+            
+            lossEquation.textContent = `L = max(0, ${margin} + ${dAP.toFixed(2)} - ${dAN.toFixed(2)}) = max(0, ${(margin + dAP - dAN).toFixed(2)}) = ${loss.toFixed(2)}`;
+            
+            // Update status
+            let status, statusClass;
+            if (dAN < dAP) {
+                status = 'Hard Negative';
+                statusClass = 'hard-status';
+            } else if (dAN < dAP + margin) {
+                status = 'Semi-Hard Negative';
+                statusClass = 'semi-hard-status';
+            } else {
+                status = 'Easy Negative';
+                statusClass = 'easy-status';
+            }
+            
+            statusIndicator.textContent = status;
+            statusIndicator.className = `status-indicator ${statusClass}`;
+            
+            // Highlight active region
+            hardRegion.style.opacity = dAN < dAP ? '0.7' : '0.3';
+            semiHardRegion.style.opacity = (dAN >= dAP && dAN < dAP + margin) ? '0.7' : '0.3';
+            easyRegion.style.opacity = dAN >= dAP + margin ? '0.7' : '0.3';
+        }
+        
+        // Margin slider
+        marginSlider.addEventListener('input', (e) => {
+            margin = parseFloat(e.target.value);
+            marginValue.textContent = margin.toFixed(1);
+            updateRegions();
+            updateLoss();
+        });
+        
+        // Dragging functionality
+        negativePoint.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            negativePoint.style.cursor = 'grabbing';
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const rect = visualArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const constrainedX = Math.max(trackStart, Math.min(trackEnd, x));
+            
+            negativePoint.style.left = `${constrainedX}px`;
+            updateLoss();
+        });
+        
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                negativePoint.style.cursor = 'grab';
+            }
+        });
+        
+        // Touch support for mobile
+        negativePoint.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const rect = visualArea.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const constrainedX = Math.max(trackStart, Math.min(trackEnd, x));
+            
+            negativePoint.style.left = `${constrainedX}px`;
+            updateLoss();
+        });
+        
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+        
+        // Initialize
+        function init() {
+            negativePoint.style.left = '350px';
+            updateRegions();
+            updateLoss();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            setTimeout(init, 100);
+        });
+        
+        init();
+    </script>
+</body>
+</html>

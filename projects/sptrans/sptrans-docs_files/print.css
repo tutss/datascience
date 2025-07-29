@@ -1,0 +1,132 @@
+* {
+background:transparent !important;
+color:#000 !important;
+text-shadow:none !important;
+filter:none !important;
+-ms-filter:none !important;
+	font-family: sans-serif;
+}
+
+body {
+margin:0;
+padding:0;
+line-height: 1.4em;
+}
+
+@page {
+margin: 0.5cm;
+}
+
+.topo-prefeitura{
+	display: none;
+}
+
+.topo-secretaria{
+	display: none;
+}
+
+.base-logo-smt{
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.base-opcoes-itinerarios{
+	display: none;
+}
+
+.forms-itinerarios{
+	display: none;
+}
+
+.mainmenu{
+	display: none;
+}
+
+.breadcrumb-sptrans{
+	display: none;
+}
+
+.conteudo-interno .col-lg-3,.sidebar{
+	display: none;
+}
+
+.bg-footer{
+	display: none;
+}
+
+.logos-footer{
+	display: none;
+}
+
+.bg-footer-claro{
+	border-top: 1px solid #000;
+	padding-top: 20px;
+}
+
+.social-things-footer{
+	display: none;
+}
+
+.base-social-icons-mobile{
+	display: none;
+}
+
+.editpage{
+	display: none;
+}
+
+.logo-sptrans-right{
+	display: none;
+}
+
+#mainmenu_mobile{
+	display: none;
+}
+
+.icones-resultados {
+    text-align: center;
+    background-color: #fafafa;
+    padding: 20px 15px;
+    line-height: 45px;
+}
+
+.icones-resultados .icone-modal {
+    display: inline;
+    margin: 0 5px;
+	max-height: 0.5cm;
+}
+
+.icone-modal img {
+    max-height: 30px;
+	margin: 0 5px;
+}
+
+.descricao-itinerario-resultado .icone-modal {
+    max-height: 18px;
+    vertical-align: text-top;
+    margin-left: 0px;
+    margin-right: 5px;
+}
+
+#divDescricaoTrecho .ordem_numero {
+    padding: 1px 1px 0 0;
+    background-color: #ccc;
+    display: inline-block;
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    font-size: 13px;
+    position: relative;
+    transform: translateY(-3px);
+    border: 2px solid #000;
+    font-weight: 800 !important;
+    margin-right: 10px;
+	margin-top: -5px;
+}
+
+#map{
+	display: block;
+	width: 100%;
+}

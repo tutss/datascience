@@ -1,0 +1,1395 @@
+.imgCarregando {
+    background: transparent url('../img/layout/ajax-loader.gif') no-repeat left center;
+    display: inline-block;
+    width: 18px;
+    height: 10px;
+}
+#pageContent { color: #666; font-size: 13px; line-height: 18px; }
+	#pageContent a, #pageContent select { color: #666; }
+
+#pageNovidades {background:url(/img/bilheteUnico/layout/novidadesContent1Bg.gif) no-repeat left top; } 
+			
+			#buContent #pageNovidades,
+			#sac #pageNovidades,
+			#terminais #pageNovidades,
+			#sptransAcao #pageNovidades,
+			#midia #pageNovidades,
+			#licitacoesContent #pageNovidades { background-color: #e5e5e5; width: 999px; margin-bottom: 1.9em;  }
+ 
+ 			#pageNovidades img{ float: left ; width: 199px!important; height: 163px!important; }
+ 			#pageNovidades #novidadesContent img {width:auto !important; float:none}
+			#pageNovidades #novidadesContent, 
+			#detalhesLinha #novidadesContent { float: left; width: 477px;  height: 150px;}
+			#novidadeDestaque {margin-bottom:2.5em; width: 750px; margin-top: -15px; }
+
+#novidadesContent h2 {display: block; text-indent: -5000em; width: 730px; height: 2.8em; margin: 1.7em 0 0 0; padding: 0; background-repeat: no-repeat; background-position:left bottom;  }
+
+
+#headerContent{width: 999px; height: 100%;}
+#botaoTwitter{margin-top: -20px; margin-bottom: 10px;}
+
+
+.deficHomeInt 
+{
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#FFF), to(#000));
+    background-image: -webkit-linear-gradient(top, #fff, #f9f9f9);
+    background-image: -moz-linear-gradient(top, #fff, #f5f5f5);
+    background-image: -ms-linear-gradient(top, #fff, #f5f5f5);
+    background-image: -o-linear-gradient(top, #fff, #f5f5f5);
+    background-image: linear-gradient(top, #fff, #f5f5f5);
+    margin: 2px 0 0 8px;
+    padding-bottom: 15px;
+}
+.devHome
+{
+    margin-bottom: 8px;
+}
+#bodyBilheteUnico #contentHolder { width: 177px; float: left;}
+
+			#buContent #novidadesContent p span{
+				color: #cc0000;
+			}
+			#buContent #novidadesContent p strong{
+				color: #cc0000;
+			}
+			#buContent #novidadesContent #novidadeDestaque p strong {color:#666666;}
+			#pageContent #buOptPrograma p strong{
+				color: #cc0000;
+			}
+			#buContent #novidadesContent p a img{
+				margin:-0.3em 0 0 12px;
+			}
+			#buContent #novidadesContent .btVoltar{
+				margin: 6em 0 0 0;
+				clear: both;
+			}
+			
+			#bodyBilheteUnico li p span{
+				color: #cc0000;
+				font-weight: bold;
+				}
+			#novidadesContent a.setaLink
+			{
+				background: url(../img/bilheteUnico/button/setaCinzaR.gif) no-repeat right;
+				padding: .5em 25px .5em 0;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+	
+	#buContent h1,
+    #buContent h3,
+    #buContent h4,
+	#buContent h5
+	{
+	    line-height: 1.6em;
+	    padding-top: 12px;
+	    width: 999px;
+		
+	}
+	/*
+        HOME DEFIC
+    */
+    #homeDevContent 
+    {
+        display: table;
+		
+		width: 999px;
+		height: 350px;
+		
+    }
+    #homeDevContentEsq,
+    #homeDevContentCen,
+    #homeDevContentDir 
+    {
+        display: table-cell;
+    }
+    #homeDevContentEsq,
+    #homeDevContentEsqUnique,
+    #homeDevContentCen,
+    #homeDevContentDir
+    {
+        width: 210px;
+        padding: 0 12px;
+        vertical-align: top;
+		
+    }
+    #homeDevContentEsqUnique
+    {
+        width: 431px;
+    }
+    #homeDevContentEsq .titulo,
+    #homeDevContentEsqUnique .titulo,
+    #homeDevContentCen .titulo,
+    #homeDevContentDir .titulo
+    {
+        text-indent: 25px;
+        cursor: default;
+        margin-bottom: 7px;
+        /*margin-left: 9px;*/
+        width: 250px;
+        text-align: center;
+    }
+    #homeDevContentEsq .titulo 
+    {
+        background: transparent url('/img/desenvolvedores/icon/gtfsHome.png') no-repeat left center;
+    }
+    #homeDevContentCen .titulo 
+    {
+        background: transparent url('/img/desenvolvedores/icon/apiHome.png') no-repeat left center;
+    }
+    #homeDevContentDir .titulo 
+    {
+        background: transparent url('/img/desenvolvedores/icon/contaHome.png') no-repeat left center;
+    }
+    #homeDevContentEsq .titulo P,
+    #homeDevContentCen .titulo P,
+    #homeDevContentDir .titulo P
+    {
+        font-size: 1.4em;
+        font-weight: bolder;
+        /*padding-left: 25px;*/
+    }
+    #homeDevContentEsq .titulo P SPAN,
+    #homeDevContentCen .titulo P SPAN,
+    #homeDevContentDir .titulo P SPAN
+    {
+        font-weight: normal;
+        font-size: 10px;
+        color: #666;
+    }
+    #homeDevContentCen .titulo P 
+    {
+        /*padding-left: 45px;*/
+    }
+    #homeDevContentEsq .informativo,
+    #homeDevContentCen .informativo,
+    #homeDevContentDir .informativo
+    {
+        padding-top: 8px;
+        margin-bottom: 10px;
+        width: 270px;
+        text-align: left;
+        height: 60px;
+    }
+    #homeDevContentCen .informativo
+    {
+        margin-top: -1px;
+    }
+    #homeDevContentEsq .informativo B,
+    #homeDevContentCen .informativo B,
+    #homeDevContentDir .informativo B
+    {
+        font-size: 11px;
+        letter-spacing: -1px;
+    }
+    .fldLogin
+    {
+        border-top: 1px solid #CCC;
+    }
+    .fldLogin INPUT 
+    {
+        width: 140px;
+    }
+    .fldLogin .userLogin,
+    .fldLogin .userPass 
+    {
+        padding-left: 23px;
+        /*margin-left: 8px;*/
+        margin-bottom: 10px;
+    }
+    .fldLogin .userLogin,
+    .usuario
+    {
+        background: transparent url('/img/desenvolvedores/icon/usuario.png') no-repeat left center;
+    }
+    .fldLogin .userPass
+    {
+        background: transparent url('/img/desenvolvedores/icon/lock.png') no-repeat left center;
+    }
+    #homeDevContentDir .informativo UL LI
+    {
+        margin: 10px 0;
+    }
+    #homeDevContentDir .informativo UL UL.subMenu
+    {
+        margin-left: 18px;
+        line-height: 18px;
+    }
+    .botoesAcesso 
+    {
+        padding: 10px 0 18px 0;
+    }
+	.menuAcessoDefic 
+	{
+	    text-align: center;
+	    margin-top: 25px;
+	}
+	.menuAcessoDefic LI { display: inline; padding: 10px; }
+	
+	#boxLoginboxLoginDeficiente H3,
+	.devContent>H3,
+    .devContent_doc>H1,
+	#boxLoginEstab H3
+	{
+	    
+		border-top:1px solid #e3e3e3;
+	    background-color: #F0F0F0;
+	    /*background: #F0F0F0 url('../img/deficiente/icon/lock.png') no-repeat 0.7em center;*/
+	    margin-bottom:18px;
+        height: 3em;
+		
+		
+	    
+	}
+	
+	
+	
+	#boxLoginDeficiente H1,
+	#boxLoginEstab H1
+	{
+	    height: 24px;
+	}
+
+	.devContent>H3 SPAN,
+    .devContent_doc>H1 SPAN,
+	#boxLoginEstab H3 SPAN
+	{
+	    padding-left: .5em;
+	    padding-top: 2em;
+	    text-transform: uppercase;
+	    /*font-size: 1.6em;
+        font-family: Consolas, Verdana;
+        font-weight: bolder;*/
+        color: #068200;
+        /*line-height: 1em;*/
+	}
+	
+	INPUT,
+	LABEL INPUT,
+	LABEL SELECT,
+	LABEL TEXTAREA,
+	.inputDefic
+	{
+	    border: 1px solid #dcdcdc;
+	    border-top-color: #c1c1c1;
+	    height: 23px;
+	    color: #555;
+	}
+	#boxCadDeficEsquerda LABEL SELECT
+	{
+	    height: 27px;
+	}
+	
+	#boxLoginDeficiente LABEL,
+	#boxLoginEstab LABEL
+	{
+	    font-weight: bolder;
+	    color: #333;
+	}
+	
+	#boxLoginDeficiente_btnLogin,
+	#boxLoginEstab_btnLogin
+	{
+        vertical-align: middle;
+        margin-top: -7px;
+	}
+	
+    #boxCadDeficEsquerda {
+        width:500px;
+        float:left;
+    }
+    .boxCadDeficDireita {
+        float:left;
+        text-align: center;
+        width: 165px;
+    }
+    #boxCadDeficEsquerda LABEL,
+    .formVertical LABEL
+    {
+        display: block;
+        font-weight: bolder;
+        padding: 0 0 8px 0;
+    }
+    #boxCadDeficEsquerda LABEL INPUT,
+    #boxCadDeficEsquerda LABEL SELECT,
+    .asmContainer,
+    .formVertical LABEL INPUT
+    {
+        width: 410px;
+        display: block;
+    }
+    #boxCadDeficEsquerda DIV.sub LABEL INPUT,
+    #boxCadDeficEsquerda DIV.sub LABEL SELECT.min
+    {
+        width: 190px;
+    }
+    #boxCadDeficEsquerda DIV.sub DIV
+    {
+        float: left;
+        width: 220px;
+    }
+    #camposFormListaEndereco DIV.sub LABEL INPUT,
+    #camposFormListaEndereco DIV.sub LABEL SELECT.min 
+    {
+        width: 180px;
+        display: block;
+    }
+    #camposFormListaEndereco DIV.sub DIV 
+    {
+        float: left;
+        width: 120px;
+    }
+    .boxCadDeficDireita .dataCopy 
+    {
+        font-weight: bolder;
+        font-size: .9em;
+        padding: 1px;
+    }
+    .boxCadDeficDireita>IMG 
+    {
+        margin-bottom: 3px;
+    }
+    .clone 
+    {
+        float: left;
+    }
+    #boxCadDeficEsquerda .add 
+    {
+        cursor: pointer;
+        margin: 18px 0 0 10px;
+        float: left;
+    }
+    #boxCadDeficEsquerda .addDiagnostico
+    {
+        cursor: pointer;
+        margin: -12px 0 0 10px;
+        float: left;
+    }
+    IMG.remove 
+    {
+        float: right;
+        margin-top: -74px;
+        margin-right: -45px;
+        cursor: pointer;
+    }
+    IMG.removeDiagnostico 
+    {
+        float: right;
+        margin-top: -55px;
+        margin-right: -26px;
+        cursor: pointer;
+    }
+    .asmContainer 
+    {
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 200px;
+    }
+    
+    .asmListItemDefic
+    {
+        position: relative;
+        margin: 0 0 2px -7px;
+        list-style: none;
+        background: #F5F5F5;
+        color: white;
+        border: 0px solid #CCC;
+        line-height: 1em;
+    }
+    
+    .asmListItemDefic:hover
+    {
+	    background-color: #dcdcdc;
+    }
+    
+    .asmListItemDeficRemove 
+    {
+	    position: absolute;
+	    right: 0; 
+	    top: 0;
+	    padding: 5px; 
+    }
+    
+    .asmListItemDeficLabel 
+    {
+	    padding: 8px 16px;
+	    display: block;
+	    color: #666;
+	    background: transparent url('../img/deficiente/icon/bullet_green.png') no-repeat left center;
+    }
+    
+    .moreInformations,
+    .moreInformationsOK
+    {
+        display: block;
+        margin-top: -18px;
+        margin-bottom: 10px;
+        padding: 8px;
+        width: 638px;
+        min-height: 33px;
+        font-size: 12px;
+        vertical-align: middle;
+        padding-left: 50px;
+    }
+    .moreInformations 
+    {
+        background: #e3e3e3 url('/img/deficiente/icon/perfilInformation.png') no-repeat 5px center;
+    }
+    .moreInformationsOK 
+    {
+        background: #e3e3e3 url('/img/deficiente/icon/perfilConfirm.png') no-repeat 5px center;
+    }
+    
+    .password 
+    {
+        font-size: 16px;
+    }
+    
+    .textoVermelho 
+    {
+        color: #c90000;
+    }
+    
+    .navRelatorios 
+    {
+        margin-bottom: 40px;
+    }
+    
+    .navRelatorios LI 
+    {
+        display: inline;
+    }
+    .navRelatorios LI A 
+    {
+        float:left;
+        margin-top: 6px;
+        margin-right: 6px;
+    }
+    
+    .button
+    {
+        -moz-border-radius: 5px 5px 5px 5px;
+        -webkit-border-radius: 5px 5px 5px 5px;
+        border-radius: 5px 5px 5px 5px;
+        background-color: #EBEBEB;
+        border: 1px solid #d8d8d8;
+        cursor: pointer;
+        font-weight: bold;
+        line-height: 2em;
+        overflow: visible;
+        font-size: 10px;
+        padding: 8px 10px 9px;
+        position: relative;
+        text-decoration: none!important;
+        text-transform: uppercase;
+        text-shadow: 0 1px 1px #FFF;
+        width: auto;
+    }
+    
+    .button:Hover
+    {
+        background-color: #a90000;
+        color: #FFF !important;
+        text-shadow: 0 0 3px #910000;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#cc0000), to(#a90000));
+        background-image: -webkit-linear-gradient(top, #cc0000, #a90000);
+        background-image: -moz-linear-gradient(top, #cc0000, #a90000);
+        background-image: -ms-linear-gradient(top, #cc0000, #a90000);
+        background-image: -o-linear-gradient(top, #cc0000, #a90000);
+        background-image: linear-gradient(top, #cc0000, #a90000);
+
+    }
+    .perfil .button
+    {
+        -moz-border-radius: 5px 5px 5px 5px;
+        -webkit-border-radius: 5px 5px 5px 5px;
+        border-radius: 5px 5px 5px 5px;
+        background-color: #EBEBEB;
+        border: 1px solid #d8d8d8;
+        cursor: pointer;
+        font-weight: bold;
+        line-height: 2em;
+        overflow: visible;
+        font-size: 10px;
+        padding: 8px 10px 9px;
+        position: relative;
+        text-decoration: none;
+        text-transform: uppercase;
+        text-shadow: 0 1px 1px #FFF;
+        width: auto;
+    }
+    .subTituloPreto 
+    {
+        font-size: 14px;
+        color: #333;
+        padding: 12px 0 8px 0;
+        font-family: 'Open Sans', Verdana, Sans-serif;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-style: italic;
+    }
+    
+    .buttonDisabled,
+    .buttonDisabled:Hover
+    {
+        text-shadow: 0 1px 1px #FFF;
+        color: #CCC !important;
+        background-color: #f0f0f0;
+    }
+    
+    .button,
+    .buttonDisabled:Hover 
+    {
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#f5f5f5));
+        background-image: -webkit-linear-gradient(top, #f5f5f5, #f0f0f0);
+        background-image: -moz-linear-gradient(top, #f5f5f5, #f0f0f0);
+        background-image: -ms-linear-gradient(top, #f5f5f5, #f0f0f0);
+        background-image: -o-linear-gradient(top, #f5f5f5, #f0f0f0);
+        background-image: linear-gradient(top, #f5f5f5, #f0f0f0);
+    }
+
+    .devContent,
+    .devContent_doc
+    {
+        clear: both;
+        margin-bottom: 12px;
+		
+    }
+    
+    .boxControleEnvio 
+    {
+        width: 250px;
+        margin-left: 96px;
+    }
+    
+    .msgConfiraInfos 
+    {
+        font-weight: bold;
+        color: red;
+    }
+    
+    .boxLink 
+    {
+        text-align: left;
+        margin-bottom: 15px;
+    }
+    
+    .boxLink UL 
+    {
+        margin-left: 20px;
+    }
+    
+    .boxLink H2, .linkBt
+    {
+        background: transparent url('/img/deficiente/icon/link.png') no-repeat left center;
+        padding-left: 18px;
+    }
+    
+    #pageNovidades #novidadesContent p img 
+    {
+        height: 80px!important;
+    }
+    .navAtividades LI 
+    {
+        padding: 5px 20px;
+    }
+    .navAtividades UL 
+    {
+        margin-left: 121px;
+        margin-top: 5px;
+    }
+    .navAtividades LI.concluido, .icConcluido { background: transparent url('/img/desenvolvedores/icon/accept.png') no-repeat left 3px; }
+    .navAtividades LI.andamento, .icAlerta { background: transparent url('/img/desenvolvedores/icon/alert.png') no-repeat left 3px; }
+    .navAtividades LI.cancelado, .icCancelado { background: transparent url('/img/desenvolvedores/icon/delete.png') no-repeat left 3px; }
+    .textComIcone 
+    {
+        padding: 5px 19px;
+    }
+    A.icPDF 
+    {
+        font-weight: bolder;
+    }
+    A.icPDF SPAN 
+    {
+        color: #000;
+    }
+    .icCadastro SPAN
+    {
+        background: transparent url('/img/desenvolvedores/icon/pencil_go.png') no-repeat left center;
+        padding: 5px 0 5px 18px;
+    }
+    .icLinkExterno SPAN
+    {
+        background: transparent url('/img/desenvolvedores/icon/link_go.png') no-repeat left center;
+        padding: 5px 0 5px 18px;
+    }
+    .icCancelado SPAN,
+    .icCancelado B 
+    {
+        color: #d04e3d;
+    }
+    .placeholder
+    {
+	    color: #bbb;
+    }
+    ::-webkit-input-placeholder
+    {
+	    color: #bbb;
+    }
+    :-moz-placeholder
+    {
+	    color: #bbb;
+    }
+    #menuTop 
+    {
+        margin: 0;
+        position: absolute;
+        right: 50px;
+        margin-top: -45px;
+    }
+    #menuTop LI
+    {
+        display: inline;
+    }
+    UL.lstButtonCancelamentoRelatorio
+    {
+        margin: 12px 0 15px 0;
+    }
+    UL.lstButtonCancelamentoRelatorio LI
+    {
+        display: inline;
+        margin-right: 8px;
+    }
+    
+    .areaEsqueciMinhaSenha 
+    {
+        margin: 5px 0;
+    }
+    .documento 
+    {
+        background: transparent url('/img/deficiente/icon/vcard.png') no-repeat left center;
+    }
+    DIV.c 
+    {
+        width: 600px;
+    }
+    DIV.c DIV 
+    {
+        width: 80px;
+        padding: 10px 19px;
+        display: inline-table;
+    }
+    DIV.c .usuario 
+    {
+        width: 235px;
+    }
+    DIV.c .especialidades 
+    {
+        background: transparent url('/img/deficiente/icon/page_white.png') no-repeat left center;
+        width: 100px;
+    }
+    .btDelProfissional_edit 
+    {
+        padding: 6px 12px 12px 0;
+    }
+    .btShowEspecialidades_edit 
+    {
+        padding: 5px 15px 0 0;
+        background: transparent url('/img/deficiente/icon/editarCadastro.png') no-repeat left center;
+        margin-left: 8px;
+    }
+    #listaEnderecos 
+    {
+        background-color: #F5F5F5;
+        border: 1px solid #CCC;
+        padding: 6px;
+        font-weight: normal;
+        color: #333;
+        width: 350px;
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 99;
+    }
+    #listaEnderecos INPUT,
+    #boxCadDeficEsquerda #listaEnderecos INPUT
+    {
+        width: 90%;
+    }
+    #listaEnderecos #camposFormListaEndereco
+    {
+        background-color: #FFF;
+        padding: 8px;
+    }
+    #listaEnderecos DIV P 
+    {
+        margin-bottom: 16px;
+        font-weight: bolder;
+        color: #003f87;
+    }
+    .fCepEstado,
+    #boxCadDeficEsquerda .fCepEstado
+    {
+        width: 100px;
+    }
+    A.underline:Link {}
+    A.underline:Hover 
+    {
+        text-decoration: underline;
+    }
+    .icHelp 
+    {
+        background: transparent url(../img/itinerario/button/btn-querAjuda.png) no-repeat left center;
+    }
+    .icConsultaCEP 
+    {
+        padding: 10px 20px;
+    }
+    #botaoBuscaCep 
+    {
+        padding-top: 6px;
+    }
+    .camposEndereco 
+    {
+        display: none;
+    }
+    .boxLoginMessages 
+    {
+        text-shadow: 0 0 3px #910000;
+        -moz-border-radius: 5px 5px 5px 5px;
+        -webkit-border-radius: 5px 5px 5px 5px;
+        border-radius: 5px 5px 5px 5px;
+        
+        color: #FFF !important;
+        background-color: #F00;
+        display: block;
+        width: 165px;
+        margin: 8px;
+        padding: 10px 0;
+        font-weight: bolder;
+        text-align: center;
+    }
+    #dialog_form 
+    {
+        display: none;
+    }
+    #dialog_form LABEL
+    {
+        font-weight: bolder;
+        font-size: 12px;
+    }
+    .dialogData
+    {
+        padding: 5px 0 10px 0;
+        font-size: 12px;
+    }
+	.ui-autocomplete 
+	{
+		max-height: 200px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		padding-right: 20px;
+	}
+	.ui-autocomplete .ui-menu-item 
+	{
+	    cursor: pointer;
+	}
+    .titHomeDev H2 
+    {
+	    background: url(/img/desenvolvedores/title/homeDev.png);
+	    height: 40px!important;
+    }
+
+    #frmDev
+    {
+        float: left;
+        width: 100%;
+        clear: left;
+    }
+    #frmDev .frmDev_layLeft
+    {
+        float: left;
+        width: 66%;
+        position: relative;
+        border-right: 1px solid #e5e5e5;
+        padding: 0 5px;
+		
+    }
+    #frmDev .frmDev_layRight
+    {
+        float: left;
+        width: 26%;
+        position: relative;
+        border-left: 2px solid #f4f4f4;
+        padding: 0 5px;
+    }
+    #frmDevFooter
+    {
+        clear:  both;
+        float:  left;
+        width:  100%;
+    }
+    #frmDevLay H3,
+    #frmDevLay H4
+    {
+        font-weight: bolder;
+        
+        color: #000;
+    }
+    .subHeading
+    {
+        color: #BBB;
+    }
+
+    .frmDev_section
+    {
+        list-style: none;
+    }
+    .frmDev_item
+    {
+	    padding: 12px 20px;
+    }
+    .frmDev_label
+    {
+        width: 100px !important;
+        font-weight: bolder;
+        margin-bottom: 9px;
+        float: left;
+        display: inline-block;
+        text-align: left;
+        padding: 3px;
+        font-size: 1.2em;
+        white-space: normal;
+    }
+    .frmDev_sublabel
+    {
+        font-size: 1em;
+        margin-top: 3px;
+        display: block;
+        color: #BBB;
+    }
+    .frmDev_sublabel_container
+    {
+        margin: 9px 9px 0 0;
+        display: inline-block;
+    }
+    .frmDev_section .required
+    {
+        color: red;
+        padding-left: 3px;
+    }
+    .frmDev_inputArea
+    {
+        display: inline-block;
+    }
+    .frmDev_inputText,
+    .frmDev_inputText_med,
+    .frmDev_inputText_min
+    {
+        padding: 4px 2px;
+        margin-left: 0;
+        border: 1px solid #ccc;
+        -moz-box-shadow: 0 1px 2px #eee inset;
+        -webkit-box-shadow: 0 1px 2px #eee inset;
+        box-shadow: 0 1px 2px #eee inset;
+        font-size: 1.4em;
+    }
+    .frmDev_inputText
+    {
+        width: 321px;
+    }
+    .frmDev_inputText_med
+    {
+        width: 241px;
+		
+    }
+    .frmDev_inputText_min
+    {
+        width: 60px;
+    }
+    
+.devContent input[type=checkbox],
+.devContent input[type=radio] {
+    width:15px;
+    height:15px;
+    vertical-align: top;
+}
+
+.fieldValidate
+{
+    margin: 15px 0;
+}
+.tituloBig
+{
+    font-size: 20px;
+    line-height: 30px;
+    color: #333;
+    font-weight: normal;
+    margin-bottom: 15px;
+}
+.destaqueVermelho
+{
+    font-weight: bolder;
+    color: #CC0000;
+    font-size: 13px;
+}
+/* PERFIL */
+.imgPerfil
+{
+    background: transparent url(/img/desenvolvedores/icon/usuario_perfil.png) no-repeat 10px 7px;
+    height: 200px;
+    float: left;
+    width: 80px;
+}
+.perfil #homeDevContentEsq,
+.perfil #homeDevContentCen
+{
+    
+}
+.perfil #homeDevContentDir .informativo
+{
+    width: 230px;
+}
+.perfil .informativo .button
+{
+    display: inline;
+    line-height: 4em;
+}
+.perfil .informativo P
+{
+    line-height: 2em !important;
+}
+.perfil .button
+{
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    background-color: #EBEBEB;
+    border: 1px solid #d8d8d8;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 2em;
+    overflow: visible;
+    font-size: 10px;
+    padding: 8px 10px 9px;
+    position: relative;
+    text-decoration: none!important;
+    text-transform: uppercase;
+    text-shadow: 0 1px 1px #FFF;
+    width: auto;
+}
+.perfil .button:Hover
+{
+    background-color: #a90000;
+    color: #FFF !important;
+    text-shadow: 0 0 3px #910000;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#cc0000), to(#a90000));
+    background-image: -webkit-linear-gradient(top, #cc0000, #a90000);
+    background-image: -moz-linear-gradient(top, #cc0000, #a90000);
+    background-image: -ms-linear-gradient(top, #cc0000, #a90000);
+    background-image: -o-linear-gradient(top, #cc0000, #a90000);
+    background-image: linear-gradient(top, #cc0000, #a90000);
+
+}
+#homeDevContent A
+{
+    color: #000;
+    font-weight: bolder;
+    text-decoration: underline!important;
+}
+#homeDevContent A:hover
+{
+    text-decoration: none!important;
+}
+
+#appsArea
+{
+    display: block;
+    background-color: #F0F0F0;
+    margin-top: 10px;
+    border-top: 1px solid #E3E3E3;
+    padding: 15px 30px;
+	
+	/*width: 940px;*/
+}
+.app
+{
+    background-color: #FFF;
+    border-bottom: 1px solid #E3E3E3;
+    border-right: 1px solid #E3E3E3;
+    display: block;
+    margin: 14px 0;
+    padding: 8px;
+}
+.appStatus
+{
+    width: 33%;
+    display: block;
+    float: right;
+}
+.appData
+{
+    width: 66%;
+    display: block;
+}
+.appData SPAN
+{
+    padding-left: 10px;
+    display: block;
+}
+.titleAppArea
+{
+    font-weight: bolder;
+    line-height: 25px;
+    font-size: 1.2em;
+}
+.appItem
+{
+    background: #FFF url(/img/desenvolvedores/icon/desktopApp.png) no-repeat 5px center;
+    -webkit-border-radius: 10px 5px;
+    border-radius: 10px 5px;
+    display: block;
+    width: 70%;
+    margin-left: -25px;
+    padding-left: 32px;
+    border-left: 2px solid #E3E3E3;
+}
+.appLabel,
+.appKey
+{
+    color: #999;
+    text-overflow: ellipsis;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.appKey:hover
+{
+    overflow: visible;
+    color: #CC0000;
+}
+.appStatus
+{
+}
+.appStatusOK
+{
+    background: #FFF url(/images/desenvolvedores/icon/accept.png) no-repeat left center;
+    display: block;
+    height: 20px;
+}
+.appStatusERROR,
+.fieldError
+{
+    background: #FFF url(/images/desenvolvedores/icon/exclamation.png) no-repeat left center;
+    display: block;
+    height: 20px;
+}
+.appStatusALERT
+{
+    background: #FFF url(/images/desenvolvedores/icon/alert.png) no-repeat left center;
+    display: block;
+    height: 20px;
+}
+
+.tituloFonteDev
+{
+	text-transform: uppercase;
+    font-family: Consolas, Verdana;
+    color: #068200;
+
+    font-size: 14px;
+    padding-top: 12px;
+    font-weight: bolder;
+    font-style: italic;
+}
+.userCard
+{
+    padding: 8px 0!important;
+    border-radius: 10px 5px;
+    background-color: #F0F0F0;
+}
+.devContent_doc H3
+{
+    
+    
+    
+    
+    
+    border-bottom: 1px solid #d2d2d2;
+    margin-bottom: 16px;
+}
+.devContent_doc H4
+{
+    color: #000;
+    
+    /*font-weight: bolder;*/
+    text-transform: capitalize;
+    letter-spacing: -1px;
+    border-bottom: 1px solid #d2d2d2;
+    margin-bottom: 16px;
+}
+.devContent_doc>H1
+{
+    height: 3em!important;
+}
+.devContent_doc code,
+.devContent_doc pre
+{
+    color: #48484c;
+    font-size: 1.3rem;
+    padding: 2px 6px;
+    background-color: #ececec;
+    border-bottom: 2px solid #c7c7c7;
+    border-radius: .3em;
+	margin-top: 5px;
+	cursor: default;
+    /*line-height: 26px;*/
+}
+.devContent_doc pre {
+	color: #adadad;
+	font-size: 1.2em;
+	background-color: #1d2129;
+}
+
+.label {
+    display: inline-block;
+    padding: 3px 5px;
+    border-radius: .3em;
+	cursor: default;
+}
+
+.label-red {
+	color: #fff;
+    background-color: #c00;
+	border-bottom: 2px solid #800;
+}
+
+.label-green {
+	color: #fff;
+    background-color: #157d00;
+	border-bottom: 2px solid #116300;
+}
+
+.devContent_doc .docContent
+{
+    padding: 12px 0 26px 0;
+}
+.devContent_doc .tabularData
+{
+    display: inline-block;
+    /*width: 70em;*/
+    margin-top: 2em;
+    border-bottom: 1px solid #ebebeb;
+	padding-bottom: .5em;
+}
+.docContent_overview .tabularData
+{
+    text-align: center;
+    border: 0;
+    
+}
+.devContent_doc .tabularData.tabdbl {
+    margin-left: 2em;
+}
+.devContent_doc .tabularData.tabdbl2 {
+    margin-left: 4em;
+}
+.devContent_doc .tabularData.tabdbl3 {
+    margin-left: 6em;
+}
+.docContent_overview .tabularData DIV.texto
+{
+    text-align: left;
+}
+.docContent_overview .app
+{
+    cursor: pointer;
+    min-height: 50px;
+    text-align: center;
+}
+.docContent_overview .app:hover
+{
+    background-color: #c00;
+    border-bottom: 1px solid #B60000;
+    border-right: 1px solid #B60000;
+    color: #fff;
+}
+.docContent_overview .app P
+{
+    font-size: 14px;
+    width: 250px;
+    display: inline-block;
+}
+.devContent_doc .tabularData .box
+{
+    width: 45em;
+    /*padding: 5px;
+    float: left;*/
+	vertical-align: text-top;
+	display: inline-block;
+}
+.devContent_doc .tabularData .boxLeft {
+    width: 15em;
+    /*line-height: 2em;*/
+}
+.devContent_doc .tabularData .boxMiddle {
+    width: 8em;
+}
+/*.devContent_doc .tabularData .boxRight
+{
+    padding-top: 13px;
+}*/
+.devContent_doc .tabularData .passo {
+    border: 3px solid #F0F0F0;
+    font-size: 2em;
+    font-weight: bolder;
+    color: #fff;
+    padding: 5px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
+    background-color: #c00;
+    margin-top: -18px;
+    float: left;
+}
+OL.apiDoc_conteudos {
+	padding: 0 1.5em
+}
+.apiDoc_conteudos LI {
+	list-style: inherit;
+}
+.apiDoc_conteudos A
+{
+    font-size: 1.2em;
+    color: #e2001a!important;
+    text-decoration: none!important;
+}
+.apiDoc_conteudos .apiDoc_conteudos A {
+	color: inherit!important;
+	font-size: 1.5rem;
+}
+.docContent H5
+{
+    font-size: 1.8rem;
+    /*color: #08C;
+    font-weight: bolder;*/
+    margin: 1.5em 0 .5em;
+	border-bottom: .05em solid;
+}
+.docContent H5 SPAN.info {
+	font-size: 10px;
+	font-style: italic;
+}
+CODE > SPAN,
+PRE > SPAN
+{
+    font-style: italic;
+	padding-right: 5px;
+}
+
+#frmDevLay{font-size: 10px;}
+#formRecoveryPass {
+    background-color: #F5F5F5;
+    border: 1px solid #CCC;
+    padding: 6px;
+    font-weight: normal;
+    color: #333;
+    width: 300px;
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 99;
+}
+
+#formRecoveryPass .form {
+    background-color: #FFF;
+    padding: 8px;
+}
+    #formRecoveryPass .form p {
+        font-weight: bolder;
+        font-size: 1.2em;
+        color: #003f87;
+    }
+    #formRecoveryPass input {
+        width: 90%;
+    }
+.formVertical LABEL
+{
+    display: block;
+    font-weight: bolder;
+    padding: 0 0 8px 0;
+}
+    .formVertical LABEL INPUT
+    {
+        width: 410px;
+        display: block;
+    }
+.fieldError {
+    border: 2px solid #a90000;
+    padding-left:20px;
+    background-position-x: 2px;
+}
+.newsMessage {
+	background-color: #fcf8e3;
+    padding: 4px 8px;
+    margin: 10px 0;
+    border-bottom: 1px solid #f0ad4e;
+    border-radius: 3px;
+    color: #8a6d3b;
+}
+.button_newPassword {
+    margin-left: 22px;
+}
+
+.thisUnderline { text-decoration: underline!important; }
+
+    .linkBold {
+        color: #000;
+        font-weight: bolder;
+        text-decoration: underline !important;
+    }
+
+    .rowWrap{
+        white-space: initial;
+    }
+
+    
+.divStatusCadastro {
+    background-color: #EEE;
+    border: 1px solid;
+    padding: 10px;
+}
+
+.closeDivStatus {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+    background:#ccc;
+}
+.closeDivStatus:hover {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+    background:#ccc;
+    color:#fff;
+    cursor:pointer;
+}
+
+.validation-summary-errors{
+	color: #e2001a;
+	list-style: none;
+}
+
+.validation-summary-errors ul, li, ul li{
+	list-style: none;
+}
+
+.bloco-conteudo {
+	margin-bottom: 20px;
+}
+
+.destaque a{
+	color: #e2001a!important;
+}

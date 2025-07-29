@@ -1,0 +1,21 @@
+.bloco-olho-vivo .vel_rapida {
+    background-color: #00870f;
+    color: #fff;
+}
+
+
+.rotulo-menu-mobile{
+	
+}
+
+.buscamobile form label{
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-weight: 300;
+	float: left;
+	padding: 1px;
+	color: #fff;
+	margin-top: 4px;
+	margin-right: 5px;
+	display: block!important;
+}

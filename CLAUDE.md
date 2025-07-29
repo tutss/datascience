@@ -4,15 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a data science repository containing Jupyter notebooks for machine learning, data analysis, and AI experiments. It includes several distinct projects:
+This is a data science repository containing Jupyter notebooks for machine learning, data analysis, and AI experiments. The repository is organized into two main sections:
 
-- **Machine Learning Experiments**: Jupyter notebooks for various ML algorithms (K-Means, Neural Networks, CatBoost, etc.)
+### Projects (`projects/`)
+Complete, production-ready applications and analysis:
+- **Query Rewriter**: Multi-agent text-to-SQL system with Next.js frontend (Mimir UI)
 - **Spotify Project**: Brazilian rap music analysis using Spotify API data
-- **Vision**: Computer vision experiments including face embeddings and attention mechanisms
-- **Query Rewriter**: Multi-agent system for text-to-SQL with Next.js frontend (Mimir UI)
-- **Torch Studies**: PyTorch experiments including ConvNets, UNet, and image inpainting
 - **SSP Data**: Brazilian police data analysis with web scraping
+- **Health Analysis**: Nike running data analysis
 - **Whisper-CLIP**: Audio-visual AI applications
+- **Zotero MCP**: Model Context Protocol server for Zotero integration
+
+### Studies (`studies/`)
+Learning materials and experimental code:
+- **Algorithms**: Core ML implementations (K-Means, Neural Networks, CatBoost)
+- **Torch Studies**: PyTorch experiments (ConvNets, UNet, self-attention)
+- **Notebooks**: General data science notebooks and plotting examples
+- **ML from A to Z**: Course materials with various ML techniques
+- **Agents**: AI agent implementations and research
+
+### Specialized Directories
+- **Vision**: Computer vision experiments (face embeddings, attention, vision transformers)
+- **Utils**: Utility scripts (PDF conversion, social media tools)
 
 ## Environment Setup
 
@@ -97,15 +110,21 @@ python api_caller.py  # Collect data from Spotify API
 - **Computer Vision**: Face recognition, attention mechanisms, image datasets
 - **Data Analysis**: EDA notebooks with pandas, matplotlib, seaborn
 
-### Project Structure
-- `agents/`: AI agent implementations and MCP servers
-- `algorithms/`: Core ML algorithm implementations
-- `notebooks/`: General data science notebooks
-- `spotify-project/`: Music data analysis pipeline
-- `vision/`: Computer vision experiments
-- `torch-studies/`: PyTorch deep learning projects
-- `ssp-data/`: Brazilian crime data analysis
-- `whisper-clip/`: Multimodal AI applications
+### Key Directory Structure
+- `projects/`: Complete applications and production analysis
+- `studies/`: Learning experiments and educational code
+- `vision/`: Computer vision experiments and datasets
+- `utils/`: General utility scripts
+
+### File Organization Guidelines
+When creating new work:
+- **Complete projects**: Place in `projects/[project-name]/`
+- **Learning experiments**: Place in `studies/[topic]/`
+- **Computer vision work**: Place in `vision/`
+- **PyTorch experiments**: Place in `studies/torch-studies/`
+- **Utility scripts**: Place in `utils/`
+
+Use descriptive names for notebooks (e.g., `spotify-eda.ipynb`) and kebab-case for project directories.
 
 ## Development Notes
 
@@ -127,5 +146,15 @@ Most analysis work is done in Jupyter notebooks. Common patterns:
 - Brazilian SSP (Public Security) data for crime analysis
 - Custom datasets for various ML experiments
 
+### Development Workflow
+Most work is exploratory and done in Jupyter notebooks:
+- Start with EDA (Exploratory Data Analysis) notebooks
+- Iterate on model training and evaluation
+- Extract reusable code into Python modules
+- For production code, move to dedicated project directories
+
 ### Testing and Validation
-No centralized testing framework is configured. Individual projects may have their own test files (e.g., `test.py` in query_rewriter_crew).
+No centralized testing framework is configured. Individual projects may have their own test files (e.g., `test.py` in query_rewriter_crew). For data science work, validation is typically done through:
+- Cross-validation in notebooks
+- Manual inspection of results
+- Comparative analysis between models
