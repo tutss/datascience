@@ -6,7 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
-*events.out*
+# TensorBoard logs
+events.out.tfevents.*
+*.tfevents.*
 
 *.xml
 *.jpg
