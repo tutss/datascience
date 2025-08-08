@@ -48,9 +48,49 @@ class FaceDataset(Dataset):
 
         return anchor, positive, negative
     
+    def get_person_images(self, person_name: str):
+        return self.person_to_images[person_name]
+    
     def get_person_name(self, idx):
         return self.all_persons[idx % len(self.all_persons)]
     
+    def load_image(self, img_path: str) -> torch.Tensor:
+        image = Image.open(img_path).convert('RGB')
+        if self.transform:
+            image = self.transform(image)
+        else:
+            transform = transforms.ToTensor()
+            image = transform(image)
+        return image
+    
+
+class SimpleFaceDataset(Dataset):
+
+    def __init__(self, data_dir: str, transform=None):
+        self.data_dir = data_dir
+        self.transform = transform
+        self.image_paths = []  # List of (image_path, person_label)
+
+        for person_dir in os.listdir(data_dir):
+            person_path = os.path.join(data_dir, person_dir)
+            if os.path.isdir(person_path):
+                images = [img for img in os.listdir(person_path)
+                        if img.lower().endswith(('.png', '.jpg', '.jpeg'))]
+
+                for img in images:
+                    img_path = os.path.join(person_path, img)
+                    self.image_paths.append((img_path, person_dir))
+
+        print(f'Loaded {len(self.image_paths)} images from {len(set(label for _, label in self.image_paths))} people')
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        img_path, person_label = self.image_paths[idx]
+        image = self.load_image(img_path)
+        return image, person_label
+
     def load_image(self, img_path: str) -> torch.Tensor:
         image = Image.open(img_path).convert('RGB')
         if self.transform:
