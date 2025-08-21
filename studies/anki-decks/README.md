@@ -118,18 +118,6 @@ We welcome contributions to improve these decks! Here's how you can help:
 3. Make your changes to the TSV files
 4. Submit a pull request with a clear description
 
-## License
-
-This work is licensed under [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
-
-You are free to:
-- **Share** - Copy and redistribute the material
-- **Adapt** - Remix, transform, and build upon the material
-
-Under the following terms:
-- **Attribution** - Give appropriate credit
-- **ShareAlike** - Distribute under the same license
-
 ## Deck Statistics
 
 | Deck | Cards | Avg. Answer Length | Topics Covered | Difficulty |
