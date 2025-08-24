@@ -71,12 +71,12 @@ class SimpleFaceDataset(Dataset):
         self.transform = transform
         self.image_paths = []  # List of (image_path, person_label)
 
+        print(f'Loading images from {data_dir}')
         for person_dir in os.listdir(data_dir):
             person_path = os.path.join(data_dir, person_dir)
             if os.path.isdir(person_path):
                 images = [img for img in os.listdir(person_path)
                         if img.lower().endswith(('.png', '.jpg', '.jpeg'))]
-
                 for img in images:
                     img_path = os.path.join(person_path, img)
                     self.image_paths.append((img_path, person_dir))

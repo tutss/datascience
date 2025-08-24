@@ -104,8 +104,6 @@ class FaceRecognitionEvaluator:
             accuracy = correct / total_queries
             results[f'top_{k}_accuracy'] = accuracy
 
-            print(f"  Top-{k} Accuracy: {accuracy:.4f} ({correct}/{total_queries})")
-
         return results
     
 def split_dataset_for_evaluation(dataset: SimpleFaceDataset, gallery_images_per_person=2, random_seed=42):
