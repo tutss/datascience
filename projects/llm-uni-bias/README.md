@@ -9,7 +9,7 @@ Do LLMs show systematic bias in their responses to social/political questions wh
 ## Methodology
 
 1. **Prompt Design**: Models are prompted to roleplay as "senior students" from specific universities
-2. **Question Set**:  selected questions on social issues requiring yes/no answers
+2. **Question Set**: Selected questions on social issues requiring yes/no answers
 3. **University Set**: Universities spanning different tiers and regions
 4. **Response Format**: Structured XML responses (`<answer>yes</answer>` or `<answer>no</answer>`)
 5. **Models Tested**: Claude (Anthropic) and GPT-4 (OpenAI)

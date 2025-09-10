@@ -2,7 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Overview
+# Rules
+
+You MUST strictly adhere to the following rules:
+
+- Do not add licenses on READMEs for this repository
+- For title and headers, only keep the first word uppercase
+- Do not use emojis
+- Avoid too many headers when writing markdown files. Keep it concise
+- Use simple and straightforward language
+- Do not add comments on generated code, when needed, only docstrings
+- Use descriptive variable names
+
+# Overview
 
 This is a data science repository containing Jupyter notebooks for machine learning, data analysis, and AI experiments. The repository is organized into two main sections:
 
@@ -158,3 +170,4 @@ No centralized testing framework is configured. Individual projects may have the
 - Cross-validation in notebooks
 - Manual inspection of results
 - Comparative analysis between models
+- Create a plan and revise it with me before executing tasks
