@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "prompt-magic"
+version = "0.1.0"
+description = "Speech-to-text prompt generation application"
+authors = ["Artur Magalhaes"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10.16"
+fastapi = "^0.104.1"
+uvicorn = {extras = ["standard"], version = "^0.24.0"}
+openai-whisper = "^20231117"
+anthropic = "^0.25.0"
+python-multipart = "^0.0.6"
+aiofiles = "^23.2.1"
+pyaudio = {version = "^0.2.11", optional = true}
+numpy = "^1.24.3"
+python-dotenv = "^1.0.0"
+pydantic-settings = "^2.1.0"
+
+[tool.poetry.extras]
+audio = ["pyaudio"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

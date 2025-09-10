@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Magic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f7fafc;
+        }
+
+        .section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .record-btn {
+            background: #48bb78;
+        }
+
+        .record-btn:hover {
+            background: #38a169;
+        }
+
+        .record-btn.recording {
+            background: #f56565;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+
+        .status {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .success {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .copy-btn {
+            background: #805ad5;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+
+        .copy-btn:hover {
+            background: #6b46c1;
+        }
+
+        .result-section {
+            background: #f0fff4;
+            border-color: #9ae6b4;
+        }
+
+        .duration {
+            font-weight: bold;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Prompt Magic</h1>
+            <p>Transform your speech into perfect prompts</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>Live Recording</h2>
+                <div class="status" id="recordingStatus">Checking audio availability...</div>
+                <div class="button-group">
+                    <button id="startRecordBtn" class="record-btn">Start Recording</button>
+                    <button id="stopRecordBtn" disabled>Stop Recording</button>
+                    <button id="processRecordBtn" disabled>Process Recording</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>File Upload</h2>
+                <input type="file" id="audioFile" accept=".wav,.mp3,.m4a,.webm,.flac,.ogg">
+                <button id="processFileBtn">Process Audio File</button>
+            </div>
+
+            <div class="section">
+                <h2>Text Input</h2>
+                <textarea id="textInput" placeholder="Type your prompt request here..."></textarea>
+                <button id="processTextBtn">Generate Prompt</button>
+            </div>
+
+            <div class="section result-section" id="resultSection" style="display: none;">
+                <h2>Generated Prompt</h2>
+                <div class="button-group">
+                    <button class="copy-btn" onclick="copyToClipboard()">Copy Prompt</button>
+                </div>
+                <textarea id="resultText" readonly></textarea>
+                <div id="transcriptionText" style="margin-top: 15px; padding: 10px; background: #e6fffa; border-radius: 6px; font-size: 0.9rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;
+        let recordingInterval;
+
+        // Check recording status on page load
+        checkRecordingStatus();
+
+        async function checkRecordingStatus() {
+            try {
+                const response = await fetch('/api/recording/status');
+                const data = await response.json();
+                
+                const statusEl = document.getElementById('recordingStatus');
+                const startBtn = document.getElementById('startRecordBtn');
+                
+                if (data.available) {
+                    statusEl.textContent = `Audio recording available. Duration: ${data.duration.toFixed(1)}s`;
+                    statusEl.className = 'status success';
+                    startBtn.disabled = data.recording;
+                    
+                    if (data.recording) {
+                        startRecordingUI();
+                    }
+                } else {
+                    statusEl.textContent = 'Audio recording not available. Use file upload instead.';
+                    statusEl.className = 'status error';
+                    startBtn.disabled = true;
+                }
+            } catch (error) {
+                document.getElementById('recordingStatus').textContent = 'Error checking audio status';
+                document.getElementById('recordingStatus').className = 'status error';
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const response = await fetch('/api/recording/start', { method: 'POST' });
+                if (response.ok) {
+                    startRecordingUI();
+                } else {
+                    const error = await response.json();
+                    alert('Failed to start recording: ' + error.detail);
+                }
+            } catch (error) {
+                alert('Error starting recording: ' + error.message);
+            }
+        }
+
+        function startRecordingUI() {
+            isRecording = true;
+            const startBtn = document.getElementById('startRecordBtn');
+            const stopBtn = document.getElementById('stopRecordBtn');
+            
+            startBtn.disabled = true;
+            startBtn.classList.add('recording');
+            startBtn.textContent = 'Recording...';
+            stopBtn.disabled = false;
+            
+            // Update duration every second
+            recordingInterval = setInterval(checkRecordingStatus, 1000);
+        }
+
+        async function stopRecording() {
+            try {
+                const response = await fetch('/api/recording/stop', { method: 'POST' });
+                if (response.ok) {
+                    stopRecordingUI();
+                } else {
+                    const error = await response.json();
+                    alert('Failed to stop recording: ' + error.detail);
+                }
+            } catch (error) {
+                alert('Error stopping recording: ' + error.message);
+            }
+        }
+
+        function stopRecordingUI() {
+            isRecording = false;
+            const startBtn = document.getElementById('startRecordBtn');
+            const stopBtn = document.getElementById('stopRecordBtn');
+            const processBtn = document.getElementById('processRecordBtn');
+            
+            startBtn.disabled = false;
+            startBtn.classList.remove('recording');
+            startBtn.textContent = 'Start Recording';
+            stopBtn.disabled = true;
+            processBtn.disabled = false;
+            
+            clearInterval(recordingInterval);
+        }
+
+        async function processRecording() {
+            showLoading();
+            try {
+                const response = await fetch('/api/recording/process', { method: 'POST' });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(data.generated_prompt, data.transcription);
+                    document.getElementById('processRecordBtn').disabled = true;
+                } else {
+                    alert('Failed to process recording: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error processing recording: ' + error.message);
+            }
+            hideLoading();
+        }
+
+        async function processFile() {
+            const fileInput = document.getElementById('audioFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select an audio file');
+                return;
+            }
+            
+            showLoading();
+            const formData = new FormData();
+            formData.append('audio_file', file);
+            
+            try {
+                const response = await fetch('/api/process-full', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(data.generated_prompt, data.transcription);
+                } else {
+                    alert('Failed to process file: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error processing file: ' + error.message);
+            }
+            hideLoading();
+        }
+
+        async function processText() {
+            const text = document.getElementById('textInput').value.trim();
+            
+            if (!text) {
+                alert('Please enter some text');
+                return;
+            }
+            
+            showLoading();
+            try {
+                const response = await fetch('/api/generate-prompt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_request: text })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(data.generated_prompt, `Input: "${text}"`);
+                } else {
+                    alert('Failed to generate prompt: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error generating prompt: ' + error.message);
+            }
+            hideLoading();
+        }
+
+        function showResult(prompt, transcription) {
+            document.getElementById('resultText').value = prompt;
+            document.getElementById('transcriptionText').innerHTML = `<strong>Source:</strong> ${transcription}`;
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showLoading() {
+            document.body.style.cursor = 'wait';
+        }
+
+        function hideLoading() {
+            document.body.style.cursor = 'default';
+        }
+
+        function copyToClipboard() {
+            const resultText = document.getElementById('resultText');
+            resultText.select();
+            document.execCommand('copy');
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = originalText, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('startRecordBtn').addEventListener('click', startRecording);
+        document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
+        document.getElementById('processRecordBtn').addEventListener('click', processRecording);
+        document.getElementById('processFileBtn').addEventListener('click', processFile);
+        document.getElementById('processTextBtn').addEventListener('click', processText);
+    </script>
+</body>
+</html>
