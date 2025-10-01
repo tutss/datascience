@@ -244,15 +244,21 @@ def plot_neighborhood_crime_matrix(data: pd.DataFrame, output_dir: Path, ano: in
 
     matrix_data = filtered_data.groupby(['BAIRRO', 'NATUREZA_APURADA']).size().unstack(fill_value=0)
     matrix_data = matrix_data.loc[top_neighborhoods[::-1]]
+    
+    row_totals = matrix_data.sum(axis=1)
 
     fig, ax = plt.subplots(figsize=(14, 10))
     matrix_data.plot(kind='barh', stacked=True, ax=ax, width=0.8)
 
-    for c in ax.containers:
-        widths = [w.get_width() for w in c]
-        total_width = sum(widths)
-        labels = [f'{int(w.get_width())}' if w.get_width() / total_width > 0.04 else '' for w in c]
-        ax.bar_label(c, labels=labels, label_type='center', fontsize=8, color='white', weight='bold')
+    for i, c in enumerate(ax.containers):
+        for j, bar in enumerate(c):
+            width = bar.get_width()
+            if width > 0:
+                neighborhood_total = row_totals.iloc[j]
+                if width / neighborhood_total > 0.05:
+                    ax.text(bar.get_x() + width / 2, bar.get_y() + bar.get_height() / 2,
+                            f'{int(width)}', ha='center', va='center', 
+                            color='white', fontsize=8, weight='bold')
 
     ax.set_title(f'Crimes por bairro (top 20 bairros) - {ano}', fontsize=16, pad=20)
     ax.set_xlabel('Número de crimes', fontsize=12)
@@ -408,26 +414,26 @@ def generate_summary_stats(data: pd.DataFrame, output_dir: Path, ano: int):
     }
 
     summary_text = f"""
-ESTATÍSTICAS RESUMIDAS - CRIMES EM SÃO PAULO {ano}
-{'=' * 60}
+    ESTATÍSTICAS RESUMIDAS - CRIMES EM SÃO PAULO {ano}
+    {'=' * 60}
 
-Registros totais: {stats['total_records']:,}
-Período: {stats['date_range']}
+    Registros totais: {stats['total_records']:,}
+    Período: {stats['date_range']}
 
-COBERTURA DE DADOS:
-- Registros com coordenadas válidas: {stats['records_with_valid_coords']:,} ({stats['coord_coverage_pct']})
+    COBERTURA DE DADOS:
+    - Registros com coordenadas válidas: {stats['records_with_valid_coords']:,} ({stats['coord_coverage_pct']})
 
-DIMENSÕES:
-- Bairros únicos: {stats['unique_neighborhoods']:,}
-- Tipos de crime únicos: {stats['unique_crime_types']:,}
-- Delegacias únicas: {stats['unique_districts']:,}
+    DIMENSÕES:
+    - Bairros únicos: {stats['unique_neighborhoods']:,}
+    - Tipos de crime únicos: {stats['unique_crime_types']:,}
+    - Delegacias únicas: {stats['unique_districts']:,}
 
-PRINCIPAIS PADRÕES:
-- Crime mais frequente: {stats['most_common_crime']}
-- Bairro mais afetado: {stats['most_affected_neighborhood'].title()}
+    PRINCIPAIS PADRÕES:
+    - Crime mais frequente: {stats['most_common_crime']}
+    - Bairro mais afetado: {stats['most_affected_neighborhood'].title()}
 
-CRIMES POR TIPO (Top 10):
-"""
+    CRIMES POR TIPO (Top 10):
+    """
 
     top_crimes = data['NATUREZA_APURADA'].value_counts().head(10)
     for crime, count in top_crimes.items():
@@ -454,7 +460,7 @@ def plot_neighborhood_comparison(citywide_data: pd.DataFrame, neighborhood_data:
     ]).sort_values(ascending=True)
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    colors = ['red' if idx == neighborhood_name else 'steelblue' for idx in comparison_data.index]
+    colors = ['#FF8C00' if idx == neighborhood_name else '#a9a9a9' for idx in comparison_data.index]
     comparison_data.plot(kind='barh', ax=ax, color=colors)
 
     ax.set_title(f'Comparação: seus bairros vs top 10 bairros de São Paulo - {ano}', fontsize=16, pad=20)
@@ -475,6 +481,7 @@ def plot_neighborhood_crime_breakdown(neighborhood_data: pd.DataFrame, output_di
     fig, ax = plt.subplots(figsize=(12, 8))
     colors = sns.color_palette('mako', len(crime_counts))
     crime_counts.plot(kind='barh', ax=ax, color=colors)
+    ax.invert_yaxis()
     ax.set_title(f'Distribuição de crimes nos seus bairros - {ano}', fontsize=16, pad=20)
     ax.set_xlabel('Número de ocorrências', fontsize=12)
     ax.set_ylabel('Tipo de crime', fontsize=12)
@@ -595,7 +602,7 @@ def plot_neighborhood_vs_citywide_crimes(citywide_data: pd.DataFrame, neighborho
     comparison = comparison.sort_values('São Paulo', ascending=False).head(5)
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    comparison.plot(kind='barh', ax=ax, color=['steelblue', 'darkred'], width=0.7)
+    comparison.plot(kind='barh', ax=ax, color=['#808080', '#FF8C00'], width=0.7)
     ax.set_title(f'Comparação de tipos de crime: seus bairros vs São Paulo - {ano}', fontsize=16, pad=20)
     ax.set_xlabel('Porcentagem do total de crimes (%)', fontsize=12)
     ax.set_ylabel('Tipo de crime', fontsize=12)
