@@ -73,6 +73,7 @@ def load_and_preprocess_data(file_path: str, ano: int = 2024, neighborhoods: lis
 
 
 def plot_hourly_heatmap(data: pd.DataFrame, output_dir: Path, ano: int):
+    missing_hours_pct = data['HOUR_OF_DAY'].isna().sum() / len(data) * 100
     hourly_data = data.dropna(subset=['HOUR_OF_DAY', 'DAY_OF_WEEK'])
 
     if len(hourly_data) == 0:
@@ -86,7 +87,10 @@ def plot_hourly_heatmap(data: pd.DataFrame, output_dir: Path, ano: int):
 
     fig, ax = plt.subplots(figsize=(14, 6))
     sns.heatmap(pivot_table, cmap='YlOrRd', annot=False, fmt='d', cbar_kws={'label': 'Número de crimes'}, ax=ax)
-    ax.set_title(f'Crimes por hora do dia e dia da semana - {ano}', fontsize=16, pad=20)
+    title = f'Crimes por hora do dia e dia da semana - {ano}'
+    if missing_hours_pct > 0:
+        title += f'\n({missing_hours_pct:.1f}% de registros sem hora da ocorrência não foram incluídos)'
+    ax.set_title(title, fontsize=16, pad=20)
     ax.set_xlabel('Hora do dia', fontsize=12)
     ax.set_ylabel('Dia da semana', fontsize=12)
     plt.tight_layout()
@@ -151,7 +155,7 @@ def plot_crime_type_distribution(data: pd.DataFrame, output_dir: Path, ano: int)
     crime_counts = data['NATUREZA_APURADA'].value_counts().head(10)
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    colors = sns.color_palette('viridis', len(crime_counts))
+    colors = sns.color_palette('Set2', len(crime_counts))
     crime_counts.plot(kind='barh', ax=ax, color=colors)
     ax.set_title(f'Distribuição dos 10 tipos de crime mais frequentes - {ano}', fontsize=16, pad=20)
     ax.set_xlabel('Número de ocorrências', fontsize=12)
@@ -239,10 +243,17 @@ def plot_neighborhood_crime_matrix(data: pd.DataFrame, output_dir: Path, ano: in
     filtered_data = data[data['BAIRRO'].isin(top_neighborhoods) & data['NATUREZA_APURADA'].isin(top_crimes)]
 
     matrix_data = filtered_data.groupby(['BAIRRO', 'NATUREZA_APURADA']).size().unstack(fill_value=0)
-    matrix_data = matrix_data.loc[top_neighborhoods]
+    matrix_data = matrix_data.loc[top_neighborhoods[::-1]]
 
     fig, ax = plt.subplots(figsize=(14, 10))
     matrix_data.plot(kind='barh', stacked=True, ax=ax, width=0.8)
+
+    for c in ax.containers:
+        widths = [w.get_width() for w in c]
+        total_width = sum(widths)
+        labels = [f'{int(w.get_width())}' if w.get_width() / total_width > 0.04 else '' for w in c]
+        ax.bar_label(c, labels=labels, label_type='center', fontsize=8, color='white', weight='bold')
+
     ax.set_title(f'Crimes por bairro (top 20 bairros) - {ano}', fontsize=16, pad=20)
     ax.set_xlabel('Número de crimes', fontsize=12)
     ax.set_ylabel('Bairro', fontsize=12)
@@ -256,7 +267,7 @@ def plot_top_crime_types(data: pd.DataFrame, output_dir: Path, ano: int):
     crime_counts = data['NATUREZA_APURADA'].value_counts().head(15)
 
     fig, ax = plt.subplots(figsize=(12, 8))
-    colors = sns.color_palette('viridis', len(crime_counts))
+    colors = sns.color_palette('mako', len(crime_counts))
     crime_counts.plot(kind='barh', ax=ax, color=colors)
     ax.set_title(f'Top 15 tipos de crime mais frequentes - {ano}', fontsize=16, pad=20)
     ax.set_xlabel('Número de ocorrências', fontsize=12)
@@ -461,23 +472,16 @@ def plot_neighborhood_comparison(citywide_data: pd.DataFrame, neighborhood_data:
 def plot_neighborhood_crime_breakdown(neighborhood_data: pd.DataFrame, output_dir: Path, ano: int):
     crime_counts = neighborhood_data['NATUREZA_APURADA'].value_counts().head(8)
 
-    fig, ax = plt.subplots(figsize=(10, 10))
-    colors = sns.color_palette('Set2', len(crime_counts))
-    wedges, texts, autotexts = ax.pie(
-        crime_counts.values,
-        labels=crime_counts.index,
-        autopct='%1.1f%%',
-        colors=colors,
-        startangle=90
-    )
-    for text in texts:
-        text.set_fontsize(9)
-    for autotext in autotexts:
-        autotext.set_color('white')
-        autotext.set_fontsize(9)
-        autotext.set_weight('bold')
-
+    fig, ax = plt.subplots(figsize=(12, 8))
+    colors = sns.color_palette('mako', len(crime_counts))
+    crime_counts.plot(kind='barh', ax=ax, color=colors)
     ax.set_title(f'Distribuição de crimes nos seus bairros - {ano}', fontsize=16, pad=20)
+    ax.set_xlabel('Número de ocorrências', fontsize=12)
+    ax.set_ylabel('Tipo de crime', fontsize=12)
+
+    for i, v in enumerate(crime_counts.values):
+        ax.text(v + 0.1, i, f'{v:,}', va='center', fontsize=9)
+
     plt.tight_layout()
     plt.savefig(output_dir / 'neighborhood_crime_breakdown.png', dpi=300, bbox_inches='tight')
     plt.close()
@@ -504,6 +508,7 @@ def plot_neighborhood_time_series(neighborhood_data: pd.DataFrame, output_dir: P
 
 
 def plot_neighborhood_hourly_pattern(neighborhood_data: pd.DataFrame, output_dir: Path, ano: int):
+    missing_hours_pct = neighborhood_data['HOUR_OF_DAY'].isna().sum() / len(neighborhood_data) * 100
     hourly_data = neighborhood_data.dropna(subset=['HOUR_OF_DAY', 'DAY_OF_WEEK'])
 
     if len(hourly_data) < 10:
@@ -517,7 +522,10 @@ def plot_neighborhood_hourly_pattern(neighborhood_data: pd.DataFrame, output_dir
 
     fig, ax = plt.subplots(figsize=(14, 6))
     sns.heatmap(pivot_table, cmap='Reds', annot=False, cbar_kws={'label': 'Número de crimes'}, ax=ax)
-    ax.set_title(f'Padrão horário de crimes nos seus bairros - {ano}', fontsize=16, pad=20)
+    title = f'Crimes por hora do dia e dia da semana nos seus bairros - {ano}'
+    if missing_hours_pct > 0:
+        title += f'\n({missing_hours_pct:.1f}% registros sem hora da ocorrência não foram incluídos)'
+    ax.set_title(title, fontsize=16, pad=20)
     ax.set_xlabel('Hora do dia', fontsize=12)
     ax.set_ylabel('Dia da semana', fontsize=12)
     plt.tight_layout()
@@ -646,8 +654,8 @@ def main():
     print("  - Série temporal...")
     plot_time_series(citywide_data, output_dir, args.year)
 
-    print("  - Distribuição de tipos de crime...")
-    plot_crime_type_distribution(citywide_data, output_dir, args.year)
+    # print("  - Distribuição de tipos de crime...")
+    # plot_crime_type_distribution(citywide_data, output_dir, args.year)
 
     print("  - Análise de crimes de alto risco...")
     plot_high_risk_crimes(citywide_data, output_dir, args.year)
@@ -658,8 +666,8 @@ def main():
     print("  - Top tipos de crime...")
     plot_top_crime_types(citywide_data, output_dir, args.year)
 
-    print("  - Ranking de bairros...")
-    plot_neighborhood_ranking(citywide_data, output_dir, args.year)
+    # print("  - Ranking de bairros...")
+    # plot_neighborhood_ranking(citywide_data, output_dir, args.year)
 
     print("  - Densidade por delegacia...")
     plot_crime_density_by_district(citywide_data, output_dir, args.year)
